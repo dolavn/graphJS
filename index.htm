@@ -1,6 +1,25 @@
 <html>
-<head></head>
+<head>
+<style>
+#container {
+	width:400px;
+	height:400px;
+	position:relative;
+	background:yellow;
+}
+#animation{
+	width:80px;
+	height:80px;
+	position:absolute;
+	background:red;
+}
+</style>
+<script src="animation.js"></script>
+</head>
 <body>
-<center>test</center>
+<button onclick="myMove()">Click here</button>
+<div id="container">
+	<div id="animation">Here animation </div>
+</div>
 </body>
 </html>
