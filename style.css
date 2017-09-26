@@ -1,5 +1,5 @@
 #container {
-	width:400px;
+	width:600px;
 	height:400px;
 	position:relative;
 	background:yellow;
@@ -9,4 +9,18 @@
 	height:80px;
 	position:absolute;
 	background:red;
+}
+#canvas{
+	width:400px;
+	height:400px;
+	position:relative;
+	background:grey;
+}
+#movable{
+	width:80px;
+	height:80px;
+	left:0px;
+	top:0px;
+	position:absolute;
+	background:green;
 }

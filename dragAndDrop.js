@@ -10,6 +10,8 @@ function mouseUp(){
 }
 
 function mouseDown(){
+	var x=0;
+	var y=0;
 	window.addEventListener('mousemove',divMove,true);
 }
 
