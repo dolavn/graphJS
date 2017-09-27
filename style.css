@@ -4,6 +4,12 @@
 	position:relative;
 	background:yellow;
 }
+#drawCanvas {
+	width:600px;
+	height:400px;
+	position:relative;
+	background:blue;
+}
 #animation{
 	width:80px;
 	height:80px;

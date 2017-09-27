@@ -1,20 +1,21 @@
 var nodes =[];
 
-function addNode(){
-	var node = new Node();
-	node.setLocation(50,50);
+function addNode(x,y){
+	var node = new Node(x,y);
+	node.setLocation(x,y);
 	nodes.push(node);
-	createCircle(50,50,20)
 }
 
 function getNodes(){
 	document.getElementById("animation").innerHTML = nodes[0].getX() + "," + nodes[0].getY();
 }
 
-function Node(){
+function Node(x,y){
+	createCircle(x,y,20)
 	this.neighbours = [];
-	this.x = 0;
-	this.y = 0;
+	this.x = x;
+	this.y = y;
+	
 }
 
 Node.prototype={
@@ -23,8 +24,11 @@ Node.prototype={
 		this.neighbours.push(node);
 	},
 	setLocation:function(x,y){
+		var gr = new jsGraphics(document.getElementById("drawCanvas"));
+		gr.clear();
 		this.x = x;
 		this.y = y;
+		createCircle(this.x,this.y,20);
 	},
 	getX:function(){
 		return this.x;
