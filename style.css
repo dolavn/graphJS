@@ -5,10 +5,10 @@
 	background:yellow;
 }
 #drawCanvas {
-	width:600px;
-	height:400px;
+	width:800px;
+	height:600px;
 	position:relative;
-	background:blue;
+	background:white;
 }
 #animation{
 	width:80px;

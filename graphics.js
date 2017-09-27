@@ -1,5 +1,3 @@
-var bgColor = new jsColor("yellow");
-
 
 function drawLine(){
 	var gr = new jsGraphics(document.getElementById("drawCanvas"));
@@ -12,17 +10,10 @@ function drawLine(){
 	gr.drawLine(pen,pt1,pt2);
 }
 
-function createCircle(x,y,radius){
+function createCircle(x,y,radius,color){
 	var gr = new jsGraphics(document.getElementById("drawCanvas"));
-	var col = new jsColor("black");
-	
+	var col = new jsColor(color);
+	var pen = new jsPen(col,3);
 	var pt = new jsPoint(x,y);
-	gr.fillCircle(col,pt,radius);
-}
-
-function removeCircle(x,y,radius){
-	var gr = new jsGraphics(document.getElementById("drawCanvas"));
-	var pt = new jsPoint(x,y);
-	
-	gr.fillCircle(bgColor,pt,radius);
+	gr.drawCircle(pen,pt,radius);
 }

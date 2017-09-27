@@ -1,9 +1,14 @@
 var nodes =[];
+var x=20;
+var y=20;
+const NODE_RADIUS=20;
 
-function addNode(x,y){
+function addNode(){
 	var node = new Node(x,y);
 	node.setLocation(x,y);
 	nodes.push(node);
+	console.log(nodes.length);
+	drawNodes();
 }
 
 function getNodes(){
@@ -11,11 +16,25 @@ function getNodes(){
 }
 
 function Node(x,y){
-	createCircle(x,y,20)
 	this.neighbours = [];
 	this.x = x;
 	this.y = y;
-	
+	this.selected = false;
+	this.collided = false;
+}
+
+function drawNodes(){
+	var gr = new jsGraphics(document.getElementById("drawCanvas"));
+	gr.clear();
+	for(i=0;i<nodes.length;i=i+1){
+		var x = nodes[i].getX();
+		var y = nodes[i].getY();
+		var color="black";
+		if(nodes[i].selected){
+			color = "blue";
+		}
+		createCircle(x,y,NODE_RADIUS,color);
+	}
 }
 
 Node.prototype={
@@ -24,11 +43,9 @@ Node.prototype={
 		this.neighbours.push(node);
 	},
 	setLocation:function(x,y){
-		var gr = new jsGraphics(document.getElementById("drawCanvas"));
-		gr.clear();
 		this.x = x;
 		this.y = y;
-		createCircle(this.x,this.y,20);
+		drawNodes();
 	},
 	getX:function(){
 		return this.x;
