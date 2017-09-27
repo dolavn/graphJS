@@ -25,6 +25,8 @@ function mouseDown(e){
 	var collNode = checkCollision(x,y);
 	if(collNode!=-1){
 		selected = nodes[collNode];
+		lastX = selected.getX();
+		lastY = selected.getY();
 		selected.selected  = true;
 		drawNodes();
 		foo = function(e){divMove(e,collNode);};
@@ -49,7 +51,10 @@ function checkCollisionNode(ind){
 			var other = nodes[i];
 			var d = dist(node.getX(),node.getY(),other.getX(),other.getY());
 			if(d<NODE_RADIUS*2){
-				
+				var string = "<font size=5>Create edge between nodes?</font>";
+				string = string + "<br><button onClick=\"createEdge(" + ind + "," + i + ")\">Yes</button>";
+				string = string + "&nbsp<button onClick=\"clearMessages(" + ind + ")\">No</button>"
+				document.getElementById("messages").innerHTML=string;
 			}
 		}
 	}

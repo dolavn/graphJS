@@ -6,9 +6,15 @@
 }
 #drawCanvas {
 	width:800px;
-	height:600px;
+	height:500px;
 	position:relative;
 	background:white;
+}
+#messages {
+	width:800px;
+	height:100px;
+	border-style:solid;
+	border-width:5px;
 }
 #animation{
 	width:80px;

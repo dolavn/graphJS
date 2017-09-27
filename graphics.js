@@ -1,12 +1,12 @@
 
-function drawLine(){
+function drawLine(x1,y1,x2,y2){
 	var gr = new jsGraphics(document.getElementById("drawCanvas"));
-	var col = new jsColor("red");
+	var col = new jsColor("black");
 	
-	var pen = new jsPen(col,1);
+	var pen = new jsPen(col,3);
 	
-	var pt1 = new jsPoint(20,30);
-	var pt2 = new jsPoint(120,230);
+	var pt1 = new jsPoint(x1,y1);
+	var pt2 = new jsPoint(x2,y2);
 	gr.drawLine(pen,pt1,pt2);
 }
 

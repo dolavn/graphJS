@@ -1,18 +1,24 @@
 var nodes =[];
-var x=20;
-var y=20;
+var lastX=20;
+var lastY=20;
 const NODE_RADIUS=20;
 
 function addNode(){
-	var node = new Node(x,y);
-	node.setLocation(x,y);
+	lastX = 20;
+	lastY = 20;	
+	var node = new Node(lastX,lastY);
+	node.setLocation(lastX,lastY);
 	nodes.push(node);
 	console.log(nodes.length);
 	drawNodes();
 }
 
-function getNodes(){
-	document.getElementById("animation").innerHTML = nodes[0].getX() + "," + nodes[0].getY();
+function getVertNum(){
+	var string = "<font size=5>Number of vertices:" + nodes.length + "<br><button onClick=\"clearMessages(-1)\">Ok</button>";
+	document.getElementById("messages").innerHTML = string;
+}
+
+function getEdgeNum(){
 }
 
 function Node(x,y){
@@ -33,8 +39,28 @@ function drawNodes(){
 		if(nodes[i].selected){
 			color = "blue";
 		}
+		for(j=0;j<nodes[i].neighbours.length;j=j+1){
+			var other = nodes[i].neighbours[j];
+			drawLine(x,y,other.getX(),other.getY());
+		}
 		createCircle(x,y,NODE_RADIUS,color);
 	}
+}
+
+function clearMessages(ind){
+	if(ind!=-1){
+		var node = nodes[ind];
+		node.setLocation(lastX,lastY);
+	}
+	document.getElementById("messages").innerHTML="";
+}
+
+function createEdge(ind1,ind2){
+	var node1 = nodes[ind1];
+	var node2 = nodes[ind2];
+	node1.addNeighbour(node2);
+	node2.addNeighbour(node1);
+	clearMessages(ind1);
 }
 
 Node.prototype={
