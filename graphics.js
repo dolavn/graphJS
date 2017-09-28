@@ -1,4 +1,4 @@
-
+//graphics addition
 var gr;
 var init=false;
 	
