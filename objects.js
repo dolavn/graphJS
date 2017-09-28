@@ -1,8 +1,11 @@
-var nodes =[];
-var lastX=20;
-var lastY=20;
-const NODE_RADIUS=20;
+var nodes =[]; //The list of the nodes
+var lastX=20; //The last x coordinate of the node selected before selection
+var lastY=20; //The last y coordinate of the node selected before selection
+const NODE_RADIUS=20; //The radius of the node
 
+/**
+	Adds a new node to the node list.
+*/
 function addNode(){
 	lastX = 20;
 	lastY = 20;	
@@ -13,14 +16,26 @@ function addNode(){
 	drawNodes();
 }
 
+/**
+	Prints the number of vertices to the screen
+*/
 function getVertNum(){
 	var string = "<font size=5>Number of vertices:" + nodes.length + "<br><button onClick=\"clearMessages(-1)\">Ok</button>";
 	document.getElementById("messages").innerHTML = string;
 }
 
+/**
+	Prints the number of edges to the screen
+*/
 function getEdgeNum(){
 }
 
+/**
+	Constructs a new Node object
+	
+	@param x The x coordinate of the node.
+	@param y The y coordinate of the node
+*/
 function Node(x,y){
 	this.neighbours = [];
 	this.x = x;
@@ -29,9 +44,11 @@ function Node(x,y){
 	this.collided = false;
 }
 
+/**
+	Draws all the nodes to the screen
+*/
 function drawNodes(){
-	var gr = new jsGraphics(document.getElementById("drawCanvas"));
-	gr.clear();
+	clearCanvas();
 	for(i=0;i<nodes.length;i=i+1){
 		var x = nodes[i].getX();
 		var y = nodes[i].getY();
@@ -41,12 +58,18 @@ function drawNodes(){
 		}
 		for(j=0;j<nodes[i].neighbours.length;j=j+1){
 			var other = nodes[i].neighbours[j];
-			drawLine(x,y,other.getX(),other.getY());
+			drawArrow(x,y,other.getX(),other.getY());
 		}
 		createCircle(x,y,NODE_RADIUS,color);
 	}
 }
 
+/**
+	Clears the messages from the screen,
+	and returns the node to it's original position, if one is selected.
+	
+	@param ind The index of the selected node, or -1 otherwise
+*/
 function clearMessages(ind){
 	if(ind!=-1){
 		var node = nodes[ind];
