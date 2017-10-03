@@ -82,7 +82,7 @@ function createEdge(ind1,ind2){
 	var node1 = nodes[ind1];
 	var node2 = nodes[ind2];
 	node1.addNeighbour(node2);
-	node2.addNeighbour(node1);
+	//node2.addNeighbour(node1);
 	clearMessages(ind1);
 }
 
