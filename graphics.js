@@ -44,26 +44,36 @@ function getAngle(x1,y1,x2,y2){
 	var y = Math.abs(dy);
 	var x = Math.abs(dx);
 	var ans = Math.atan(dy/dx);
-	/*
-	if(dy>=0 && dx>=0){
-		ans = Math.PI-ans;
-		console.log("nothing added");
-	}
-	if(dy>=0 && dx<0){
-		console.log("added 90");
-		ans = ans + Math.PI/2;
-	}
-	if(dy<0 && dx<0){
-		console.log("added 180");
-		ans = ans + Math.PI;
-		ans = Math.PI-ans;
-	}
-	if(dy<0 && dx>=0){
-		console.log("added 270");
-		ans = ans + 3*Math.PI/2;
-	}*/
 	ans = ans + Math.PI/2; 
 	return ans;
+}
+
+function getCorrPoint(x1,y1,x2,y2,d){
+	var m = getSlope(x1,y1,x2,y2);
+	if(m==Number.POSITIVE_INFINITY){
+		if(y2>y1){
+			return {"x":x2,"y":y2-d};
+		}else{
+			return {"x":x2,"y":y2+d};
+		}
+	}else{
+		var x =0;
+		if(x2>x1){
+			x = x2-(d/Math.sqrt(1+Math.pow(m,2)));
+		}else{
+			x = x2+(d/Math.sqrt(1+Math.pow(m,2)));
+		}
+		var y = m*x-m*x2+y2;
+		return {"x":x,"y":y};
+	}
+}
+
+function getSlope(x1,y1,x2,y2){
+	if(x2!=x1){
+		return (y2-y1)/(x2-x1);
+	}else{
+		return Number.POSITIVE_INFINITY;
+	}
 }
 
 function drawArrow(x1,y1,x2,y2){
@@ -91,7 +101,12 @@ function drawArrow(x1,y1,x2,y2){
 			coeff=-1;
 		}
 	}
-
+	var point = getCorrPoint(x1,y1,x2,y2,NODE_RADIUS);
+	x2 = point['x'];
+	y2 = point['y'];
+	point = getCorrPoint(x2,y2,x1,y1,NODE_RADIUS);
+	x1 = point['x'];
+	y1 = point['y'];
 	var dx1 = Math.cos(triangle1Ang)*dist*coeff;
 	var dy1 = Math.sin(triangle1Ang)*dist*coeff;
 	var dx2 = Math.sin(triangle2Ang)*dist*coeff;
