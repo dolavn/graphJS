@@ -15,6 +15,16 @@ function clearCanvas(){
 	gr.clear();
 }
 
+function drawText(x1,y1,txt){
+	if(!init){
+		initGraphics();
+	}
+	var col = new jsColor("black");
+	var font = new jsFont("Arial","normal","x-small","normal","normal");
+	var point = new jsPoint(x1,y1);
+	gr.drawText(txt,point,font,col,2,"center");
+}
+
 function drawLine(x1,y1,x2,y2){
 	if(!init){
 		initGraphics();
@@ -28,13 +38,13 @@ function drawLine(x1,y1,x2,y2){
 	gr.drawLine(pen,pt1,pt2);
 }
 
-function createCircle(x,y,radius,color){
+function createCircle(x1,y1,radius,color){
 	if(!init){
 		initGraphics();
 	}
 	var col = new jsColor(color);
 	var pen = new jsPen(col,3);
-	var pt = new jsPoint(x,y);
+	var pt = new jsPoint(x1,y1);
 	gr.drawCircle(pen,pt,radius);
 }
 
