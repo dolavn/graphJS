@@ -2,19 +2,15 @@
 <head></head>
 <body>
 <?php
-	/*class MyDB extends SQLite3
-	{
-		function __construct(){
-			$this->open('data.db');
+	include('dbconn.php');
+	$db = new Database();
+	if($db){
+		$results = $db->query('SELECT first_name FROM members');
+		while($row = $results->fetchArray()){
+			var_dump($row);
 		}
-	}*/
-	$dir = 'sqlite:data.db';
-	$dbh = new PDO($dir) or die("cannot open");
-	
-	if(!$dbh){
-		echo("error");
 	}else{
-		echo("success");
+		echo("cannot connect");
 	}
 ?>
 </body>
