@@ -5,9 +5,10 @@
 	include('dbconn.php');
 	$db = new Database();
 	if($db){
-		$results = $db->query('SELECT first_name FROM members');
-		while($row = $results->fetchArray()){
-			var_dump($row);
+		$results = $db->query('SELECT member_id,user_name FROM members');
+		while($row=$db->getArray($results)){
+			echo($row[0] . " " . $row[1]);
+			echo("<br>");
 		}
 	}else{
 		echo("cannot connect");
