@@ -2,14 +2,13 @@
 <head></head>
 <body>
 <?php
-	class MyDB extends SQLite3
+	/*class MyDB extends SQLite3
 	{
 		function __construct(){
 			$this->open('data.db');
 		}
-	}
-	
-	$db = new MyDB();
+	}*/
+	$db = sqlite_open("data.db");
 	
 	if(!$db){
 		echo("error");
