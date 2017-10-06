@@ -10,6 +10,12 @@
 	position:relative;
 	background:white;
 }
+#nodesTable{
+	width:200px;
+	height:800px;
+	position:relative;
+	background:white;
+}
 #messages {
 	width:800px;
 	height:100px;

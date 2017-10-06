@@ -21,7 +21,6 @@ function mouseDown(e){
 	var offset = getPosition(document.getElementById('drawCanvas'));
 	var x=e.clientX-offset.x;
 	var y=e.clientY-offset.y;
-	console.log("(" + x + " , " + y + ")");
 	var collNode = checkCollision(x,y);
 	if(collNode!=-1){
 		selected = nodes[collNode];
@@ -66,7 +65,6 @@ function checkCollision(x,y){
 		var currX = nodes[i].getX();
 		var currY = nodes[i].getY();
 		if(dist(x,y,currX,currY)<NODE_RADIUS){
-			console.log("curr:(" + currX + " , " + currY + ")");
 			ans = i;
 		}
 	}
