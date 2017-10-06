@@ -2,16 +2,11 @@
 <head></head>
 <body>
 <?php
-	class MyDB extends SQLite3 {
-		function __construct(){
-			$this->open('data.db');
-		}
-	}
-	$db = new MyDB();
+	$db = sqlite_open('data.db');
 	if(!$db){
-		echo $db->lastErrorMsg();
+		echo("error");
 	}else{
-		echo "Database opened successfully\n";
+		echo("success");
 	}
 ?>
 </body>
