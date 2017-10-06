@@ -8,9 +8,10 @@
 			$this->open('data.db');
 		}
 	}*/
-	$db = sqlite_open("data.db");
+	$dir = 'sqlite:data.db';
+	$dbh = new PDO($dir) or die("cannot open");
 	
-	if(!$db){
+	if(!$dbh){
 		echo("error");
 	}else{
 		echo("success");
