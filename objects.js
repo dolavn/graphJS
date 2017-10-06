@@ -27,7 +27,7 @@ function addNode(){
 */
 function getVertNum(){
 	var string = "<font size=5>Number of vertices:" + nodes.length + "<br><button onClick=\"clearMessages(-1)\">Ok</button>";
-	document.getElementById("messages").innerHTML = string;
+	document.getElementById("messageBox").innerHTML = string;
 }
 
 /**
@@ -41,7 +41,38 @@ function getEdgeNum(){
 		edges = edges + nodes[i].neighbours.length;
 	}
 	var string = "<font size=5>Number of edges:" + edges + "<br><button onClick=\"clearMessages(-1)\">Ok</button>";
-	document.getElementById("messages").innerHTML = string;
+	document.getElementById("messageBox").innerHTML = string;
+}
+
+/**
+	Removes a selected node from the graph.
+	
+	@param ind The index of the node to be removed.
+*/
+function removeNode(ind){
+	for(i=0;i<nodes.length;i=i+1){
+		if(i!=ind){
+			var found=false;
+			for(j=0;j<nodes[i].neighbours.length && !found;j=j+1){
+				if(nodes[i].neighbours[j]==ind){
+					nodes[i].neighbours.splice(j,1);
+				}
+			}
+		}
+	}
+	nodes.splice(ind,1);
+	for(i=ind;i<nodes.length;i=i+1){
+		var node = nodes[i];
+		node.ind = node.ind - 1;
+	}
+	for(i=0;i<nodes.length;i=i+1){
+		for(j=0;j<nodes[i].neighbours.length;j=j+1){
+			if(nodes[i].neighbours[j]>ind){
+				nodes[i].neighbours[j] = nodes[i].neighbours[j]-1;
+			}
+		}
+	}
+	hideControlPanel();
 }
 
 /**
@@ -49,24 +80,31 @@ function getEdgeNum(){
 */
 function drawNodes(){
 	clearCanvas();
-	var txt="<table border=1><tr><td>Node</td><td>Parent</td><td>SCC</td></tr>"; //Creates the table of the nodes
+	var txt="<table id=\"dateTable\" border=1><tr><td>Node</td><td>Parent</td><td>SCC</td></tr>"; //Creates the table of the nodes
 	for(i=0;i<nodes.length;i=i+1){
 		var x = nodes[i].getX();
 		var y = nodes[i].getY();
 		var color="black";
+		var rowType="regularRow";
+		for(j=0;j<nodes[i].neighbours.length;j=j+1){ //Goes over all the neighbours of the current node
+			color = "black";
+			if(selectedEdge[0]==i && selectedEdge[1]==j){
+				color = "blue";
+			}
+			var other = nodes[nodes[i].neighbours[j]];
+			drawArrow(x,y,other.getX(),other.getY(),color); //Draws edges
+			color = "black";
+		}
 		if(nodes[i].selected){
 			color = "blue";
-		}
-		for(j=0;j<nodes[i].neighbours.length;j=j+1){ //Goes over all the neighbours of the current node
-			var other = nodes[nodes[i].neighbours[j]];
-			drawArrow(x,y,other.getX(),other.getY()); //Draws edges
+			rowType = "selectedRow";
 		}
 		drawCircle(x,y,NODE_RADIUS,color); //Draws the node
 		if(showDFSOutput){
 			var txtD = "d:" + nodes[i].getDiscovery() + "\n" + "f:" + nodes[i].getFinish(); //Draws the text on the node
 			drawText(x-NODE_RADIUS/2,y-NODE_RADIUS/2,txtD);		
 		}
-		txt = txt + "<tr><td>" + i + "</td><td>" + nodes[i].pare + "</td><td>" + nodes[i].scc + "</td></tr>"; //Adds this node's row to the table
+		txt = txt + "<tr id=\"" + rowType + "\"><td>" + i + "</td><td>" + nodes[i].pare + "</td><td>" + nodes[i].scc + "</td></tr>"; //Adds this node's row to the table
 	}
 	txt = txt + "</table>";
 	document.getElementById("nodesTable").innerHTML = txt;
@@ -83,7 +121,28 @@ function clearMessages(ind){
 		var node = nodes[ind];
 		node.setLocation(lastX,lastY);
 	}
-	document.getElementById("messages").innerHTML="";
+	document.getElementById("messageBox").innerHTML="";
+}
+
+/**
+	Removes the edge that goes from the node in index ind1, to the node of index ind2.
+	
+	@param ind1 The first index
+	@param ind2 The second index
+*/
+function removeEdge(ind1,ind2){
+	var node = nodes[ind1];
+	node.removeEdge(ind2);
+	drawNodes();
+	document.getElementById("edgeControlPanel").style.visibility="collapse";
+}
+
+/**
+	Hides the nodes control panel.
+*/
+function hideControlPanel(){
+	document.getElementById("nodeControlPanel").style.visibility="collapse";
+	drawNodes();
 }
 
 /**
@@ -205,6 +264,22 @@ Node.prototype={
 		this.f = fi;
 	},
 	/**
+		Removes an edge from this node to another.
+		
+		@param ind The index of the other node.
+	*/
+	removeEdge:function(ind){
+		var del=-1; //The index to remove
+		for(j=0;j<this.neighbours.length && del==-1;j=j+1){
+			if(this.neighbours[j]==ind){
+				del = j;
+			}
+		}
+		if(del!=-1){
+			this.neighbours.splice(del,1);
+		}
+	},
+	/**
 		Returns a copy of this node, without it's neighbours.
 		
 		@return A copy of this node, without it's neighbours.
@@ -221,6 +296,77 @@ Node.prototype={
 		ans.f=this.f;
 		ans.neighbours = [];
 		return ans;
+	}
+}
+
+/**
+	Creates a new line object, which goes from point (x1,y1) to point (x2,y2)
+	
+	@param x1 The first x coordinate
+	@param y1 The first y coordinate
+	@param x2 The second x coordinate
+	@param y2 The second y coordinate
+*/
+function Line(x1,y1,x2,y2){
+	this.x1 = x1;
+	this.y1 = y1;
+	this.x2 = x2;
+	this.y2 = y2;
+	this.vertical = x1==x2;
+	if(!this.vertical){
+		this.m = (y2-y1)/(x2-x1);
+		this.n = y2 - this.m*x2;
+	}else{
+		this.m = Number.POSITIVE_INFINITY;
+		this.n = undefined;
+	}
+}
+
+Line.prototype={
+	constructor:Line,
+	/**
+		Returns the y point on the line y=mx+n.
+		
+		@param x The x value
+		@return The y value of the given x.
+	*/
+	getY:function(x){
+		if(!this.vertical){
+			return (this.m)*x + (this.n);
+		}
+	},
+	/**
+		Returns the x value on the line of a given y value.
+		
+		@param y The given y value
+		@return The x value of this y value.
+	*/
+	getX:function(y){
+		if(this.vertical){
+			return x1;
+		}else{
+			console.log("get");
+			return (y-n)/m;
+		}
+	},
+	/**
+		Returns true if a given point (x,y) is on the line. Takes into account the line's width.
+		
+		@param x The x coordinate of the point.
+		@param y The y coordinate of the point.
+		@param width The line's width.
+	*/
+	onLine:function(x,y,width){
+		if(this.vertical){
+			var ym = Math.min(this.y1,this.y2);
+			var yM = Math.max(this.y1,this.y2);
+			return (y>=ym && y<=yM && x>=x1-width && x<=x1+width);
+		}else{
+			var xm = Math.min(this.x1,this.x2);
+			var xM = Math.max(this.x1,this.x2);
+			var y0 = this.getY(x);
+			return (x>=xm && x<=xM && y>=y0-width && y<=y0+width);
+		}
 	}
 }
 

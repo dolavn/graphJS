@@ -45,11 +45,11 @@ function drawText(x1,y1,txt){
 	@param x2 The second x coordinate
 	@param y2 The second y coordinate
 */
-function drawLine(x1,y1,x2,y2){
+function drawLine(x1,y1,x2,y2,color){
 	if(!init){
 		initGraphics();
 	}
-	var col = new jsColor("black");
+	var col = new jsColor(color);
 	
 	var pen = new jsPen(col,3);
 	
@@ -151,7 +151,7 @@ function getSlope(x1,y1,x2,y2){
 	@param x2 The second x coordinate
 	@param y2 The second y coordinate
 */
-function drawArrow(x1,y1,x2,y2){
+function drawArrow(x1,y1,x2,y2,color){
 	var dist=20;
 	var a = getAngle(x1,y1,x2,y2); //Gets the angle the line makes with the positive direction of the x axis.
 	var triangle1Ang=0;
@@ -194,7 +194,7 @@ function drawArrow(x1,y1,x2,y2){
 	var nx2 = x2+dx2;
 	var ny1 = y2+dy1;
 	var ny2 = y2+dy2;
-	drawLine(x1,y1,x2,y2); //The main line.
-	drawLine(x2,y2,nx1,ny1); //Draws one half of the arrow head.
-	drawLine(x2,y2,nx2,ny2); //Draws the other half of the arrow head.
+	drawLine(x1,y1,x2,y2,color); //The main line.
+	drawLine(x2,y2,nx1,ny1,color); //Draws one half of the arrow head.
+	drawLine(x2,y2,nx2,ny2,color); //Draws the other half of the arrow head.
 }

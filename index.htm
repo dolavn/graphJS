@@ -17,7 +17,12 @@
 <button onClick="transpose()">Create Transpose</button><br><br>
 <button onClick="findSCC(nodes)">Find SCC</button></td><td>
 <div id="drawCanvas"></div>
-<div id="messages"></div>
+<div id="messages"><table id="nodeControlPanel"><tr><td>
+<button onClick="removeNode(selectedInd)">Remove node</button>
+</td></tr></table>
+<table id="edgeControlPanel"><tr><td>
+<button onClick="removeEdge(selectedEdge[0],selectedEdge[1])">Remove edge</button></td></tr></table>
+<div id="messageBox"></div>
 </div></td><td><div id="nodesTable"></div></td></tr></table></center>
 </body>
 </html>
