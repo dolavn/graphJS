@@ -2,7 +2,15 @@
 <head></head>
 <body>
 <?php
-	$db = sqlite_open('data.db');
+	class MyDB extends SQLite3
+	{
+		function __construct(){
+			$this->open('data.db');
+		}
+	}
+	
+	$db = new MyDB();
+	
 	if(!$db){
 		echo("error");
 	}else{
