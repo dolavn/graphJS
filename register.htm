@@ -1,0 +1,30 @@
+<meta charset="utf-8"/>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="register.css">
+<script src="register.js"></script>
+</head>
+<body><form method="post" action="register.php">
+<p dir=ltr align=center><table>
+<tr><td>User name:</td><td><input type="text" name="user_name" id="user_name" placeholder="Your user name..."><br>
+<div class=errorText id="userError"></div>
+</td></tr>
+<tr><td>Password:</td><td>
+<div class=popup>
+<span class="popuptext" id="myPopup">Password must contain at least 8 characters<br>
+And may contain only English or Hebrew characters, digits and the symbols:<br>
+?,!,@,#,$,%,^,&,*,(,)
+</span></div>
+<input type="password" name="password" id="password" onfocus="passwordPopup()"><br>
+<div class=errorText id="passwordError"></div></td></tr>
+<tr><td>Retype password:</td><td><input type="password" name="retype"><br>
+<div class=errorText id="password2Error"></div></td></tr>
+<tr><td>First name:</td><td><input type="text" name="first_name" placeholder="Your first name..."><br>
+<div class=errorText id="firstNameError"></div></td></tr>
+<tr><td>Last name:</td><td><input type="text" name="last_name" placeholder="Your last name..."><br>
+<div class=errorText id="lastNameError"></div></td></tr></td></tr>
+<tr><td>Your email:</td><td><input type="text" name="email" placeholder="Your email..."><br>
+<div class=errorText id="emailError"></div></td></tr></td></tr></table><br>
+<input type="submit" value="Submit" onclick="return checkform()"></center></p></form>
+</body>
+</html>

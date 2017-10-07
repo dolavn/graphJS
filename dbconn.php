@@ -29,8 +29,6 @@
 			$result = sqlite_exec($str,$this->db);
 			if(!$result){
 				die("cannot execute");
-			}else{
-				echo("success");
 			}
 		}
 	}

@@ -4,6 +4,7 @@
 <?php
 	include('dao.php');
 	$members = new Members();
+	echo($members->getNextId()."<br><br>");
 	$members->fetchAll();
 	echo("<table border=1><tr><td>Id</td><td>User name</td><td>First name</td><td>Last name</td><td>Email</td><td>Password</td></tr>");
 	while($member = $members->getNext()){

@@ -1,0 +1,117 @@
+
+.popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.popup .popuptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left:420px;
+	margin-bottom:-100px;
+}
+
+.popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+.popup .hide{
+	visibility:hidden;
+}
+
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+}
+
+
+body{
+	background-color:#ecf2f8;
+}
+
+p{
+	font-family: verdana;
+	font-size:18px;
+	color:black;
+}
+
+table{
+	width:40%;
+}
+
+input{
+	width:400px;
+	padding: 8px 10px;
+	margin:6px 0;
+	display:inline-block;
+	border:1px solid #ccc;
+	border-radius:4px;
+	box-sizing:border-box;
+}
+
+input[type=submit]{
+	width:40%;
+	height:40px;
+	font-size:16px;
+	background-color:#45a049;
+	color:white;
+	padding:8px 10px;
+	margin:8px 0;
+	border:none;
+	border-radius:4px;
+}
+
+input[type=submit]:hover{
+	background-color:#459249;
+}
+
+.errorText{
+	color:#960000;
+	font-size:10px;
+	margin-top:-5px;
+}
+
+#userError{
+	visibility:hidden;
+}
+
+#passwordError{
+	visibility:hidden;
+}
+
+#password2Error{
+	visibility:hidden;
+}
+
+#firstNameError{
+	visibility:hidden;
+}
+
+#lastNameError{
+	visibility:hidden;
+}
+
+#emailError{
+	visibility:hidden;
+}

@@ -1,6 +1,7 @@
 <?php
 	include('dbconn.php');
 	include('dto.php');
+	
 	class Members{
 		private $db;
 		private $rows;
@@ -12,6 +13,28 @@
 		function fetchAll(){
 			$str = "SELECT member_id,user_name,first_name,last_name,email,password FROM members";
 			$this->rows = $this->db->query($str);
+		}
+		
+		function getNextId(){
+			#$str = "DELETE FROM members WHERE member_id=2";
+			#$this->db->exec($str);
+			$str = "SELECT MAX(member_id) FROM members";
+			$this->rows = $this->db->query($str);
+			$curr = $this->db->getArray($this->rows);
+			$this->rows = false;
+			return $curr[0]+1;
+		}
+		
+		function addMember($member){
+			$id = $member->getId();
+			$user_name = $member->getUserName();
+			$first_name = $member->getFirstName();
+			$last_name = $member->getLastName();
+			$email = $member->getEmail();
+			$password = $member->getPassword();
+			$str = "INSERT INTO members(member_id,user_name,first_name,last_name,email,password)
+					VALUES (".$id.",'".$user_name."','".$first_name."','".$last_name."','".$email."','".$password."')";
+			$this->db->exec($str);
 		}
 		
 		function getNext(){
