@@ -8,14 +8,14 @@
 <script src="objects.js"></script>
 <script src="algorithm.js"></script>
 </head>
-<body><center>
-<table><tr><td>
-<button onClick="addNode()">Add node</button><br><br>
-<button onClick="getVertNum()">Get number of vertices</button><br><br>
-<button onClick="getEdgeNum()">Get number of edges</button><br><br>
-<button onClick="runDFS(nodes)">Run DFS</button><br><br>
-<button onClick="transpose()">Create Transpose</button><br><br>
-<button onClick="findSCC(nodes)">Find SCC</button></td><td>
+<body>
+<table border=1><tr><td><div id="toolbar">
+<input type="button" onClick="addNode()" value="Add node"><br><br>
+<input type="button" onClick="getVertNum()" value="Get number of vertices"><br><br>
+<input type="button" onClick="getEdgeNum()" value="Get number of edges"><br><br>
+<input type="button" onClick="runDFS(nodes)" value="Run DFS"><br><br>
+<input type="button" onClick="transpose()" value="Create Transpose"><br><br>
+<input type="button" onClick="findSCC(nodes)" value="Find SCC"></div></td><td>
 <div id="drawCanvas"></div>
 <div id="messages"><table id="nodeControlPanel"><tr><td>
 <button onClick="removeNode(selectedInd)">Remove node</button>
@@ -23,6 +23,6 @@
 <table id="edgeControlPanel"><tr><td>
 <button onClick="removeEdge(selectedEdge[0],selectedEdge[1])">Remove edge</button></td></tr></table>
 <div id="messageBox"></div>
-</div></td><td><div id="nodesTable"></div></td></tr></table></center>
+</div></td><td><div id="nodesTable"></div></td></tr></table>
 </body>
 </html>

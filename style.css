@@ -1,14 +1,15 @@
-#container {
-	width:600px;
-	height:400px;
-	position:relative;
-	background:yellow;
+table{
+	margin:0px;
 }
+
 #drawCanvas {
-	width:800px;
-	height:500px;
+	width:100%;
+	height:600px;
 	position:relative;
-	background:white;
+	background:red;
+	border-color:black;
+	border:10px;
+	border-radius:5px;
 }
 #nodesTable{
 	width:200px;
@@ -21,17 +22,12 @@
 	height:100px;
 	border-style:solid;
 	border-width:5px;
+	border-radius:10px;
 }
 #messageBox{
 	width:800px;
 	height:80px;
 	border-width:0px;
-}
-#animation{
-	width:80px;
-	height:80px;
-	position:absolute;
-	background:red;
 }
 #canvas{
 	width:400px;
@@ -73,4 +69,26 @@
 	border:0px;
 	border-collapse:collapse;
 	visibility:collapse;
+}
+
+#toolbar{
+	background-color:#2d2d2d; 
+	width:250px;
+}
+
+input[type=button]{
+	background-color:#cccccc;
+	border:4px;
+	font-size:16px;
+	font-family:verdana;
+	margin-left:5%;
+	margin-top:5px;
+	border-radius:2px;
+	width:90%;
+	height:22px;
+}
+
+input[type=button]:hover{
+	background-color:#adabab;
+}
 }
