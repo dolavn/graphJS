@@ -15,6 +15,11 @@
 			$this->rows = $this->db->query($str);
 		}
 		
+		function deleteMember($member_id){
+			$str = "DELETE FROM members WHERE member_id='".$member_id."'";
+			$this->db->exec($str);
+		}
+		
 		function getNextId(){
 			#$str = "DELETE FROM members WHERE member_id=2";
 			#$this->db->exec($str);
