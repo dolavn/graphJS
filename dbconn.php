@@ -21,7 +21,7 @@
 			if(!$res){
 				die("result invalid");
 			}
-			$next =sqlite_fetch_array($res);
+			$next = sqlite_fetch_array($res);
 			return $next;
 		}
 		
