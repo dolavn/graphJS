@@ -17,6 +17,13 @@ function disconnect(){
 function login(){
 	var popup = document.getElementById("popupLogin");
 	popup.classList.toggle("popupLoginShow");
+	document.getElementById("hiderLogin").style.visibility = "visible";
+}
+
+function hideLogin(){
+	var popup = document.getElementById("popupLogin");
+	popup.classList.toggle("popupLoginHide");	
+	document.getElementById("hiderLogin").style.visibility = "hidden";
 }
 
 /* Shows popup for node panel */

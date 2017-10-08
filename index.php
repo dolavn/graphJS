@@ -13,6 +13,7 @@
 <script src="algorithm.js"></script>
 </head>
 <body>
+<div class="hider" id="hiderLogin" onClick="hideLogin()"></div>
 <div class="popuptext" id="messagePopup"></div>
 <div class="popuplogin" id="popupLogin"><iframe src="login.php" class="frame"></iframe></div>
 <div class="sidenav" id="toolbar">
