@@ -39,9 +39,9 @@
 		echo("<div class=\"errorText\">User name or password incorrect</div><br>");
 	}
 	echo("<p dir=\"ltr\" align=\"center\">");
-	echo("<table style=\"width:100%\"><tr><td style=\"width:20%\">");
-	echo("User name:</td><td style=\"width:80%\"><input type=\"text\" id=\"user_name\" name=\"user_name\" placeholder=\"Your user name...\"></td></tr>");
-	echo("<tr><td style=\"width:20%\">Password:</td><td style=\"width:80%\"><input type=\"password\" id=\"password\" name=\"password\"></td></tr></table>");
+	echo("<table style=\"width:100%\"><tr><td style=\"width:30%\">");
+	echo("User name:</td><td style=\"width:70%\"><input type=\"text\" id=\"user_name\" name=\"user_name\" placeholder=\"Your user name...\"></td></tr>");
+	echo("<tr><td style=\"width:30%\">Password:</td><td style=\"width:70%\"><input type=\"password\" id=\"password\" name=\"password\"></td></tr></table>");
 	echo("<input type=\"submit\" value=\"Submit\">");
 ?>
 </body>
