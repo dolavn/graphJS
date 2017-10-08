@@ -49,6 +49,20 @@ function findSCC(nodes){
 	}
 }
 
+function runDFSNode(nodes,ind){
+	console.log("hey");
+	hidePopup();
+	DFSInit(nodes);
+	dfsVisit(nodes[ind],nodes);
+	for(i=0;i<nodes.length;i=i+1){
+		if(nodes[i].getColor()==0){
+			dfsVisit(nodes[i],nodes);
+		}
+	}
+	showDFSOutput=true;
+	drawNodes();
+}
+
 function runDFS(nodes){
 	var i;
 	DFSInit(nodes);

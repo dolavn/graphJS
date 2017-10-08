@@ -15,14 +15,32 @@
 			$this->rows = $this->db->query($str);
 		}
 		
+		function getMemberById($member_id){
+			$str = "SELECT member_id,user_name,first_name,last_name,email,password FROM members WHERE member_id='".$member_id."'";
+			$this->rows = $this->db->query($str);
+			return $this->getNext();
+		}
+		
 		function deleteMember($member_id){
 			$str = "DELETE FROM members WHERE member_id='".$member_id."'";
 			$this->db->exec($str);
 		}
 		
+		function login($user_name,$password){
+			$str = "SELECT member_id,password FROM members WHERE user_name='".$user_name."'";
+			$this->rows = $this->db->query($str);
+			if(sqlite_num_rows($this->rows)==0){
+				return -1;
+			}else{
+				$curr = $this->db->getArray($this->rows);
+				if($curr[1]==$password){
+					return $curr[0];
+				}
+			}
+			return -1;
+		}
+		
 		function getNextId(){
-			#$str = "DELETE FROM members WHERE member_id=2";
-			#$this->db->exec($str);
 			$str = "SELECT MAX(member_id) FROM members";
 			$this->rows = $this->db->query($str);
 			$curr = $this->db->getArray($this->rows);

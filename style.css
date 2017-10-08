@@ -1,7 +1,44 @@
+.mainTable{
+	height:100%;
+	margin-bottom:5px;
+}
+
 .popup {
     position: relative;
     display: inline-block;
     cursor: pointer;
+}
+
+.popupLogin{
+	visibility: hidden;
+    width: 30%;
+	height:40%;
+    background-color: #ecf2f8;
+	font-family: verdana;
+	font-size:18px;
+	color:black;
+    color: #555;
+    text-align: center;
+    border-radius: 6px;
+	border:2px solid;
+	border-color:black;
+    padding: 0px 0;
+	left:30%;
+	top:10%;
+    position: absolute;
+    z-index: 2;
+    margin-left:100px;
+	margin-bottom:100px;
+}
+
+.popupLoginShow{
+	visibility: visible;
+    -webkit-animation: fromTop 1s;
+    animation: fromTop 1s
+}
+
+.popupLoginHide{
+	visibility:hidden;
 }
 
 .popuptext{
@@ -28,14 +65,6 @@
 	visibility:hidden;
 }
 
-.test{
-	color:red;
-}
-
-.test .blueText{
-	color:blue;
-}
-
 table{
 	margin-top:0;
 	width:100%;
@@ -44,6 +73,16 @@ table{
 
 body{
 	background-color:#e8e8e8;
+}
+
+@-webkit-keyframes fromTop{
+	from {top:-200px;}
+	to {top:10%}
+}
+
+@keyframes fromTop{
+	from {top:-200px;}
+	to {top:10%}	
 }
 
 /* Add animation (fade in the popup) */
@@ -55,6 +94,14 @@ body{
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity:1 ;}
+}
+
+.frame{
+	margin:0;
+	padding:0;
+	border:none;
+	width:100%;
+	height:100%;
 }
 
 .sidenav {
@@ -85,11 +132,33 @@ body{
 	background-color:#700000;
 }
 
+.redButton{
+	background-color:#d80003;
+	margin-left:4px;
+	border:0;
+	border-radius:5px;
+	color:white;
+}
+
+.redButton:hover{
+	background-color:#700000;
+}
+
+.greenButton{
+	background-color:#45a049;
+	margin-left:4px;
+	border:0;
+	border-radius:5px;
+	color:white;
+}
+
+.greenButton:hover{
+	background-color:#459249;
+}
 
 #main {
     transition: margin-left .5s;
 	margin-left:250px;
-
     padding: 0;
 }
 
@@ -105,11 +174,12 @@ body{
 }
 
 #nodesTable{
-	width:200px;
-	height:800px;
+	width:100%;
+	height:100%;
+	margin-left:5px;
 	position:relative;
-	background:white;
-}
+}	
+
 #messages{
 	width:800px;
 	height:100px;
@@ -137,19 +207,22 @@ body{
 	background:green;
 }
 
-#dateTable{
-	border:1px solid;
-	border-collapse:collapse;
+#dataTable{
+	border:1px;
+	border-color:black;
+	border-radius:6px;
+	background-color:#4E4D4E;
+	color:white;
 }
 
 #regularRow{
-	border-color:black;
-	color:black;
+	color:white;
+	border:1px;
 }
 
 #selectedRow{
-	border-color:blue;
-	color:blue;
+	background-color:#2d2d2d;
+	color:white;
 }
 
 #nodeControlPanel{
@@ -166,6 +239,7 @@ body{
 
 #toolbar{
 	background-color:#2d2d2d; 
+	color:white;
 	height:800px;
 }
 
@@ -176,6 +250,8 @@ body{
 	height:0;
 	transition:0.5s;
 }
+
+
 
 #showToolBar:hover{
 	background-color:#4f4f4f;
@@ -196,4 +272,30 @@ input[type=button]{
 input[type=button]:hover{
 	background-color:#adabab;
 }
-**/
+
+
+#popupLogin input{
+	width:200px;
+	padding: 8px 10px;
+	margin:6px 0;
+	display:inline-block;
+	border:1px solid #ccc;
+	border-radius:4px;
+	box-sizing:border-box;
+}
+
+#popupLogin input[type=submit]{
+	width:40%;
+	height:40px;
+	font-size:16px;
+	background-color:#45a049;
+	color:white;
+	padding:8px 10px;
+	margin:8px 0;
+	border:none;
+	border-radius:4px;
+}
+
+#popupLogin input[type=submit]:hover{
+	background-color:#459249;
+}

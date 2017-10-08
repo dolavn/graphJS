@@ -18,10 +18,16 @@ function rightClick(e){
 	var y=e.clientY-offset.y;
 	e.preventDefault();
 	var ind = checkCollision(x,y);
+	checkCollisionEdge(x,y);
+	if(selectedEdge[0]!=-1){
+		setTimeout(function(){popupVisible=true;},30);
+		showPopupEdge(e.clientX,e.clientY,selectedEdge[0],selectedEdge[1]);
+	}
 	if(ind!=-1){
 		setTimeout(function(){popupVisible=true;},30);
 		showPopupNode(e.clientX,e.clientY,ind);
 	}
+	
 	return false;
 }
 
@@ -47,15 +53,12 @@ function mouseDown(e){
 	var y=e.clientY-offset.y;
 	var collNode = checkCollision(x,y);
 	checkCollisionEdge(x,y);
-	document.getElementById("edgeControlPanel").style.visibility = "collapse";
 	if(selectedEdge[0]!=-1){
-		document.getElementById("edgeControlPanel").style.visibility = "visible";
 		drawNodes();
 	}
 	if(collNode!=-1){
 		selected = nodes[collNode];
 		selectedInd = collNode;
-		document.getElementById("nodeControlPanel").style.visibility="visible";
 		lastX = selected.getX();
 		lastY = selected.getY();
 		selected.selected  = true;
@@ -63,7 +66,6 @@ function mouseDown(e){
 		foo = function(e){divMove(e,collNode);};
 		window.addEventListener('mousemove',foo,true);
 	}else{
-		document.getElementById("nodeControlPanel").style.visibility="collapse";
 		if(selected!=null){
 			selected.selected=false;
 			drawNodes();
@@ -75,7 +77,6 @@ function mouseDown(e){
 function divMove(e,ind){
 	var node = nodes[ind];
 	move = true;
-	document.getElementById("nodeControlPanel").style.visibility="collapse";
 	var offset = getPosition(document.getElementById('drawCanvas'));
 	node.setLocation(e.clientX-offset.x,e.clientY-offset.y);
 	/*if(checkCollisionNode(ind)!=-1){

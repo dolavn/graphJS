@@ -10,8 +10,18 @@ function closeNav() {
 	document.getElementById("showToolBar").style.height="25px";
 } 
 
+function disconnect(){
+	window.location="logout.php";
+}
+
+function login(){
+	var popup = document.getElementById("popupLogin");
+	popup.classList.toggle("popupLoginShow");
+}
+
 /* Shows popup for node panel */
 function showPopupNode(x,y,ind){
+	console.log("hey");
 	var popup = document.getElementById("messagePopup");
 	popup.classList.toggle("popupShow");
 	popup.style.left=x;
@@ -19,10 +29,19 @@ function showPopupNode(x,y,ind){
 	var string = "<input type=\"button\" value=\"Delete node\" onClick=\"removeNode(" + ind + ")\"><br>";
 	if(indNodeFrom==-1){
 		string = string + "<input type =\"button\" value=\"Edge from here\" onClick=\"edgeFrom(" + ind + ")\"><br>";
-	}else{
+	}else if(indNodeFrom!=ind){
 		string = string + "<input type =\"button\" value=\"Edge to here\" onClick=\"createEdge(" + indNodeFrom + "," + ind +")\"><br>";
 	}
-	string = string + "<input type=\"button\" value=\"Run DFS from here\" onClick=\"runDFS(" + ind + ")\">";
+	string = string + "<input type=\"button\" value=\"Run DFS from here\" onClick=\"runDFSNode(nodes," + ind + ")\">";
+	popup.innerHTML = string;
+}
+
+function showPopupEdge(x,y,ind1,ind2){
+	var popup = document.getElementById("messagePopup");
+	popup.classList.toggle("popupShow");
+	popup.style.left=x;
+	popup.style.top=y;
+	var string = "<input type=\"button\" value=\"Remove edge\" onClick=\"removeEdge(" + ind1 + "," + ind2+ ")\"><br>";
 	popup.innerHTML = string;
 }
 

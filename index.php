@@ -11,8 +11,25 @@
 </head>
 <body>
 <div class="popuptext" id="messagePopup"></div>
+<div class="popuplogin" id="popupLogin"><iframe src="login.php" class="frame"></iframe></div>
 <div class="sidenav" id="toolbar">
 <button class="closebtn" onclick="closeNav()">Hide</button>
+<?php
+	include("dao.php");
+	session_start();
+	$str="";
+	if(isset($_SESSION['member_id'])){
+		$members = new Members();
+		$member = $members->getMemberById($_SESSION['member_id']);
+		$str = "Logged in as ".$member->getUserName();
+		$str = $str." <button class=\"redButton\" onClick=\"disconnect()\">Disconnect</button><br>";
+	}else{
+		$str = "Not logged in.<button onClick=\"login()\" class=\"greenButton\">Log in</button>";
+		$str = $str."<button onClick=\"register()\" class=\"greenButton\">Register</button>";
+	}
+	echo($str);
+?>
+<br>
 <input type="button" onClick="addNode()" value="Add node">
 <input type="button" onClick="getVertNum()" value="Get number of vertices">
 <input type="button" onClick="getEdgeNum()" value="Get number of edges">
@@ -21,16 +38,9 @@
 <input type="button" onClick="findSCC(nodes)" value="Find SCC"></div>
 <div id="main">
 <input type="button" onclick="openNav()" id="showToolBar" value="Show tool bar">
-<table border=0><tr><td style="width:80%">
+<table class="mainTable"><tr><td style="width:80%">
 <div id="drawCanvas" oncontextmenu="rightClick(event)">
 </div></td>
 <td style="width:20%"><div id="nodesTable"></div></td></table>
-<div id="messages"><table id="nodeControlPanel"><tr><td>
-<button onClick="removeNode(selectedInd)">Remove node</button>
-</td></tr></table>
-<table id="edgeControlPanel"><tr><td>
-<button onClick="removeEdge(selectedEdge[0],selectedEdge[1])">Remove edge</button></td></tr></table>
-<div id="messageBox"></div>
-</div></div>
 </body>
 </html>

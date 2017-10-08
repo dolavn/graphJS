@@ -86,8 +86,8 @@ function removeNode(ind){
 			}
 		}
 	}
-	hideControlPanel();
 	hidePopup();
+	drawNodes();
 }
 
 /**
@@ -95,7 +95,7 @@ function removeNode(ind){
 */
 function drawNodes(){
 	clearCanvas();
-	var txt="<table id=\"dateTable\" border=1><tr><th>Node</th><th>Parent</th><th>SCC</th></tr>"; //Creates the table of the nodes
+	var txt="<table id=\"dataTable\" cellspacing=0><tr><th>Node</th><th>Parent</th><th>SCC</th></tr>"; //Creates the table of the nodes
 	for(i=0;i<nodes.length;i=i+1){
 		var x = nodes[i].getX();
 		var y = nodes[i].getY();
@@ -149,7 +149,7 @@ function removeEdge(ind1,ind2){
 	var node = nodes[ind1];
 	node.removeEdge(ind2);
 	drawNodes();
-	document.getElementById("edgeControlPanel").style.visibility="collapse";
+	hidePopup();
 }
 
 /**
