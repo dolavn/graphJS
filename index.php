@@ -15,9 +15,9 @@
 <body>
 <div class="hider" id="hiderLogin" onClick="hideLogin()"></div>
 <div class="popuptext" id="messagePopup"></div>
-<div class="popuplogin" id="popupLogin"><iframe src="login.php" class="frame"></iframe></div>
+<div class="popuplogin" id="popupLogin"><span class="closebtn" onClick="hideLogin()">&times;</span><iframe src="login.php" class="frame"></iframe></div>
 <div class="sidenav" id="toolbar">
-<button class="closebtn" onclick="closeNav()">Hide</button>
+<button class="hidebtn" onclick="closeNav()">Hide</button>
 <?php
 	include("dao.php");
 	$str="";
