@@ -1,7 +1,8 @@
+<meta charset="utf-8"/>
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="style.css">
-<script src="animation.js"></script>
+<script src="ui.js"></script>
 <script src="dragAndDrop.js"></script>
 <script src ="jsDraw2D.js"></script>
 <script src="graphics.js"></script>
@@ -9,20 +10,27 @@
 <script src="algorithm.js"></script>
 </head>
 <body>
-<table border=1><tr><td><div id="toolbar">
-<input type="button" onClick="addNode()" value="Add node"><br><br>
-<input type="button" onClick="getVertNum()" value="Get number of vertices"><br><br>
-<input type="button" onClick="getEdgeNum()" value="Get number of edges"><br><br>
-<input type="button" onClick="runDFS(nodes)" value="Run DFS"><br><br>
-<input type="button" onClick="transpose()" value="Create Transpose"><br><br>
-<input type="button" onClick="findSCC(nodes)" value="Find SCC"></div></td><td>
-<div id="drawCanvas"></div>
+<div class="popuptext" id="messagePopup"></div>
+<div class="sidenav" id="toolbar">
+<button class="closebtn" onclick="closeNav()">Hide</button>
+<input type="button" onClick="addNode()" value="Add node">
+<input type="button" onClick="getVertNum()" value="Get number of vertices">
+<input type="button" onClick="getEdgeNum()" value="Get number of edges">
+<input type="button" onClick="runDFS(nodes)" value="Run DFS">
+<input type="button" onClick="transpose()" value="Create Transpose">
+<input type="button" onClick="findSCC(nodes)" value="Find SCC"></div>
+<div id="main">
+<input type="button" onclick="openNav()" id="showToolBar" value="Show tool bar">
+<table border=0><tr><td style="width:80%">
+<div id="drawCanvas" oncontextmenu="rightClick(event)">
+</div></td>
+<td style="width:20%"><div id="nodesTable"></div></td></table>
 <div id="messages"><table id="nodeControlPanel"><tr><td>
 <button onClick="removeNode(selectedInd)">Remove node</button>
 </td></tr></table>
 <table id="edgeControlPanel"><tr><td>
 <button onClick="removeEdge(selectedEdge[0],selectedEdge[1])">Remove edge</button></td></tr></table>
 <div id="messageBox"></div>
-</div></td><td><div id="nodesTable"></div></td></tr></table>
+</div></div>
 </body>
 </html>

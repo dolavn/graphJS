@@ -1,15 +1,28 @@
 window.onload = addListeners;
 var move = false;
+var popupVisible=false;
 var foo=function(){};
 var selected=null;
 var selectedInd=-1;
 var selectedEdge=[-1,-1];
 const EDGE_WIDTH = 3;
 
-
 function addListeners(){
 	document.getElementById('drawCanvas').addEventListener('mousedown',mouseDown,false);
 	window.addEventListener('mouseup',mouseUp,false);
+}
+
+function rightClick(e){
+	var offset = getPosition(document.getElementById('drawCanvas'));
+	var x=e.clientX-offset.x;
+	var y=e.clientY-offset.y;
+	e.preventDefault();
+	var ind = checkCollision(x,y);
+	if(ind!=-1){
+		setTimeout(function(){popupVisible=true;},30);
+		showPopupNode(e.clientX,e.clientY,ind);
+	}
+	return false;
 }
 
 function mouseUp(){
@@ -26,6 +39,9 @@ function mouseUp(){
 }
 
 function mouseDown(e){
+	if(popupVisible){
+		hidePopup(-1);
+	}
 	var offset = getPosition(document.getElementById('drawCanvas'));
 	var x=e.clientX-offset.x;
 	var y=e.clientY-offset.y;
@@ -62,7 +78,10 @@ function divMove(e,ind){
 	document.getElementById("nodeControlPanel").style.visibility="collapse";
 	var offset = getPosition(document.getElementById('drawCanvas'));
 	node.setLocation(e.clientX-offset.x,e.clientY-offset.y);
-	checkCollisionNode(ind);
+	/*if(checkCollisionNode(ind)!=-1){
+		setTimeout(function(){popupVisible=true;},10);
+		showPopupCreateEdge(e.clientX,e.clientY,ind,i);
+	}*/
 }
 
 function checkCollisionNode(ind){
@@ -72,13 +91,16 @@ function checkCollisionNode(ind){
 			var other = nodes[i];
 			var d = dist(node.getX(),node.getY(),other.getX(),other.getY());
 			if(d<NODE_RADIUS*2){
+				/*
 				var string = "<font size=5>Create edge between nodes?</font>";
 				string = string + "<br><button onClick=\"createEdge(" + ind + "," + i + ")\">Yes</button>";
 				string = string + "&nbsp<button onClick=\"clearMessages(" + ind + ")\">No</button>"
-				document.getElementById("messageBox").innerHTML=string;
+				document.getElementById("messageBox").innerHTML=string;*/
+				return i;
 			}
 		}
 	}
+	return -1;
 }
 
 function checkCollisionEdge(x,y){

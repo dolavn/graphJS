@@ -3,6 +3,7 @@ var nodeCount=0;
 var lastX=20; //The last x coordinate of the node selected before selection
 var lastY=20; //The last y coordinate of the node selected before selection
 var showDFSOutput=false; //If true, discovery time and finish time will be shown for each node
+var indNodeFrom=-1;
 const NODE_RADIUS=25; //The radius of the node
 const MAX_WIDTH=800;
 const MAX_HEIGHT=500;
@@ -21,6 +22,19 @@ function addNode(){
 	nodes.push(node); //Adds the node to the nodes list
 	drawNodes(); //Draws the node
 }
+
+/**
+	Sets the index of the node from which an edge would leave.
+	
+	@param The index of the node
+*/
+function edgeFrom(ind){
+	indNodeFrom = ind;
+	nodes[ind].selected = false;
+	drawNodes();
+	hidePopup();
+}
+	
 
 /**
 	Prints the number of vertices to the screen
@@ -73,6 +87,7 @@ function removeNode(ind){
 		}
 	}
 	hideControlPanel();
+	hidePopup();
 }
 
 /**
@@ -80,7 +95,7 @@ function removeNode(ind){
 */
 function drawNodes(){
 	clearCanvas();
-	var txt="<table id=\"dateTable\" border=1><tr><td>Node</td><td>Parent</td><td>SCC</td></tr>"; //Creates the table of the nodes
+	var txt="<table id=\"dateTable\" border=1><tr><th>Node</th><th>Parent</th><th>SCC</th></tr>"; //Creates the table of the nodes
 	for(i=0;i<nodes.length;i=i+1){
 		var x = nodes[i].getX();
 		var y = nodes[i].getY();
@@ -159,10 +174,15 @@ function transpose(){
 	@param ind2 The index of the second node.
 */
 function createEdge(ind1,ind2){
+	console.log("creating");
 	var node1 = nodes[ind1];
 	var node2 = nodes[ind2];
 	node1.addNeighbour(ind2);
-	clearMessages(ind1);
+	nodes[ind1].selected=false;
+	nodes[ind2].selected=false;
+	indNodeFrom = -1;
+	hidePopup();
+	drawNodes();
 }
 
 /**
