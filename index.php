@@ -1,3 +1,6 @@
+<?php
+	session_start();
+?>
 <meta charset="utf-8"/>
 <html>
 <head>
@@ -16,7 +19,6 @@
 <button class="closebtn" onclick="closeNav()">Hide</button>
 <?php
 	include("dao.php");
-	session_start();
 	$str="";
 	if(isset($_SESSION['member_id'])){
 		$members = new Members();
