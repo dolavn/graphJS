@@ -22,7 +22,7 @@ function login(){
 
 function hideLogin(){
 	var popup = document.getElementById("popupLogin");
-	popup.classList.toggle("popupLoginHide");	
+	popup.classList.toggle("popupLoginShow");	
 	document.getElementById("hiderLogin").style.visibility = "hidden";
 }
 
@@ -56,5 +56,5 @@ function hidePopup(){
 	console.log("hiding");
 	var popup = document.getElementById("messagePopup");
 	popupVisible = false;
-	popup.classList.toggle("popupHide");
+	popup.classList.toggle("popupShow");
 }

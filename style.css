@@ -28,9 +28,6 @@
     width: 35%;
 	height:45%;
     background-color: #ecf2f8;
-	font-family: verdana;
-	font-size:18px;
-	color:black;
     color: #555;
     text-align: center;
     border-radius: 10px;
@@ -51,10 +48,6 @@
     animation: fromTop 1s
 }
 
-.popupLoginHide{
-	visibility:hidden;
-}
-
 .popuptext{
     visibility: hidden;
     width: 200px;
@@ -73,10 +66,6 @@
     visibility: visible;
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s
-}
-
-.popupHide{
-	visibility:hidden;
 }
 
 table{
