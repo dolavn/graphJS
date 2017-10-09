@@ -1,14 +1,21 @@
+var navOpen=true;
+const NAV_WIDTH = 250;
+
 function openNav() {
-    document.getElementById("toolbar").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
+    document.getElementById("toolbar").style.width = NAV_WIDTH + "px";
+    document.getElementById("main").style.marginLeft = NAV_WIDTH + "px";
 	document.getElementById("showToolBar").style.height="0";
+	navOpen = true;
+	drawNodes();
 }
 
 function closeNav() {
     document.getElementById("toolbar").style.width = "0";
     document.getElementById("main").style.marginLeft = "0";
 	document.getElementById("showToolBar").style.height="25px";
-} 
+	navOpen = false;
+	drawNodes();
+}
 
 function disconnect(){
 	window.location="logout.php";
@@ -28,7 +35,6 @@ function hideLogin(){
 
 /* Shows popup for node panel */
 function showPopupNode(x,y,ind){
-	console.log("hey");
 	var popup = document.getElementById("messagePopup");
 	popup.classList.toggle("popupShow");
 	popup.style.left=x;
@@ -53,7 +59,6 @@ function showPopupEdge(x,y,ind1,ind2){
 }
 
 function hidePopup(){
-	console.log("hiding");
 	var popup = document.getElementById("messagePopup");
 	popupVisible = false;
 	popup.classList.toggle("popupShow");

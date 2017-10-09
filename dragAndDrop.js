@@ -12,10 +12,17 @@ function addListeners(){
 	window.addEventListener('mouseup',mouseUp,false);
 }
 
-function rightClick(e){
+function getMousePos(e){
 	var offset = getPosition(document.getElementById('drawCanvas'));
-	var x=e.clientX-offset.x;
-	var y=e.clientY-offset.y;
+	var xPos=e.clientX-offset.x;
+	var yPos=e.clientY-offset.y;
+	return {x:xPos,y:yPos};
+}
+
+function rightClick(e){
+	var pos = getMousePos(e);
+	var x = pos.x;
+	var y = pos.y;
 	e.preventDefault();
 	var ind = checkCollision(x,y);
 	checkCollisionEdge(x,y);
@@ -48,9 +55,9 @@ function mouseDown(e){
 	if(popupVisible){
 		hidePopup(-1);
 	}
-	var offset = getPosition(document.getElementById('drawCanvas'));
-	var x=e.clientX-offset.x;
-	var y=e.clientY-offset.y;
+	var pos = getMousePos(e);
+	var x = pos.x;
+	var y = pos.y;
 	var collNode = checkCollision(x,y);
 	checkCollisionEdge(x,y);
 	if(selectedEdge[0]!=-1){

@@ -121,7 +121,7 @@ function getCorrPoint(x1,y1,x2,y2,d){
 		}else{ //x2 is to the left of x1
 			x = x2+(d/Math.sqrt(1+Math.pow(m,2)));
 		}
-		var y = m*x-m*x2+y2;
+		var y = m*(x-x2)+y2;
 		return {"x":x,"y":y};
 	}
 }

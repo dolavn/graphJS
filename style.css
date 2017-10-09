@@ -9,6 +9,14 @@
     cursor: pointer;
 }
 
+.seperator{
+	border-top:2px solid white;
+	width:100%;
+	height:10px;
+	margin-top:15px;
+	margin-bottom:15px;
+}
+
 .closebtn{
 	color: #2d2d2d;
     float: right;
@@ -199,12 +207,9 @@ body{
 }	
 
 #messages{
-	width:800px;
-	height:100px;
-	border-style:solid;
-	border-width:5px;
-	border-radius:10px;
+	margin-left:5px;
 }
+
 #messageBox{
 	width:800px;
 	height:80px;

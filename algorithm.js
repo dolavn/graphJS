@@ -47,6 +47,7 @@ function findSCC(nodes){
 			cont=false;
 		}
 	}
+	drawNodes();
 }
 
 function runDFSNode(nodes,ind){

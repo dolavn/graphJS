@@ -5,15 +5,61 @@ var lastY=20; //The last y coordinate of the node selected before selection
 var showDFSOutput=false; //If true, discovery time and finish time will be shown for each node
 var indNodeFrom=-1;
 const NODE_RADIUS=25; //The radius of the node
-const MAX_WIDTH=800;
-const MAX_HEIGHT=500;
+
+function loadGraph(graph_id){
+	var url = "loadGraph.php";
+	var params = "graph_id=" + graph_id;
+	var http = new XMLHttpRequest();
+	http.open("POST",url,true);
+	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	http.setRequestHeader("Content-length", params.length);
+	http.setRequestHeader("Connection", "close");
+	http.onreadystatechange = function() {//Call a function when the state changes.
+		if(http.readyState == 4 && http.status == 200) {
+			decodeGraph(http.responseText);
+		}
+	}
+	http.send(params);
+}
+
+function decodeGraph(str){
+	str = str.substr(1,str.length-2);
+	var res = str.split("$");
+	var name = res[0];
+	var nodes=[];
+	for(i=1;i<res.length;i=i+1){
+		var nodeStr = res[i].split("?");
+		var ind = parseInt(nodeStr[0]); var x = parseInt(nodeStr[1]); var y=parseInt(nodeStr[2]);
+		var currNode = new Node(x,y,ind);
+		for(j=3;j<nodeStr.length;j=j+1){
+			if(nodeStr[j]!=-1){
+				currNode.addNeighbour(parseInt(nodeStr[j]));
+			}
+		}
+		nodes.push(currNode);
+	}
+	loadNodes(nodes);
+}
+
+function loadNodes(newNodes){
+	nodes = newNodes;
+	nodeCount = newNodes.length;
+	drawNodes();
+}
+
+
+function calcCanvasWidth(){
+	windowWidth = $(window).width();
+}
 
 /**
 	Adds a new node to the node list.
 */
 function addNode(){
-	var x = Math.random()*MAX_WIDTH; //Random x coordinate
-	var y = Math.random()*MAX_HEIGHT; //Random y coordinate
+	var width = $(drawCanvas).width();
+	var height = $(drawCanvas).height();
+	var x = Math.random()*(width-NODE_RADIUS); //Random x coordinate
+	var y = Math.random()*(height-NODE_RADIUS); //Random y coordinate
 	lastX = x; //Changes the last x to be the x of the new node
 	lastY = y; //Changes the last y to be the y of the new node
 	var node = new Node(lastX,lastY,nodeCount); //Creates the node
@@ -40,8 +86,8 @@ function edgeFrom(ind){
 	Prints the number of vertices to the screen
 */
 function getVertNum(){
-	var string = "<font size=5>Number of vertices:" + nodes.length + "<br><button onClick=\"clearMessages(-1)\">Ok</button>";
-	document.getElementById("messageBox").innerHTML = string;
+	var string = "Number of vertices:" + nodes.length + "<br><input type=\"button\" onClick=\"clearMessages(-1)\" value=\"Ok\">";
+	document.getElementById("messages").innerHTML = string;
 }
 
 /**
@@ -54,8 +100,8 @@ function getEdgeNum(){
 	for(i=0;i<nodes.length;i=i+1){
 		edges = edges + nodes[i].neighbours.length;
 	}
-	var string = "<font size=5>Number of edges:" + edges + "<br><button onClick=\"clearMessages(-1)\">Ok</button>";
-	document.getElementById("messageBox").innerHTML = string;
+	var string = "Number of edges:" + edges + "<br><input type=\"button\" onClick=\"clearMessages(-1)\" value=\"Ok\">";
+	document.getElementById("messages").innerHTML = string;
 }
 
 /**
@@ -97,6 +143,20 @@ function drawNodes(){
 	clearCanvas();
 	var txt="<table id=\"dataTable\" cellspacing=0><tr><th>Node</th><th>Parent</th><th>SCC</th></tr>"; //Creates the table of the nodes
 	for(i=0;i<nodes.length;i=i+1){
+		var width=$(drawCanvas).width();
+		var height=$(drawCanvas).height();
+		if(nodes[i].getX()>width-NODE_RADIUS){
+			nodes[i].x = width-NODE_RADIUS;
+		}
+		if(nodes[i].getX()<NODE_RADIUS){
+			nodes[i].x = NODE_RADIUS;
+		}
+		if(nodes[i].getY()>height-NODE_RADIUS){
+			nodes[i].y = height-NODE_RADIUS;
+		}
+		if(nodes[i].getY()<NODE_RADIUS){
+			nodes[i].y = NODE_RADIUS;
+		}
 		var x = nodes[i].getX();
 		var y = nodes[i].getY();
 		var color="black";
@@ -136,7 +196,7 @@ function clearMessages(ind){
 		var node = nodes[ind];
 		node.setLocation(lastX,lastY);
 	}
-	document.getElementById("messageBox").innerHTML="";
+	document.getElementById("messages").innerHTML="";
 }
 
 /**

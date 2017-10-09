@@ -93,6 +93,13 @@
 			$this->rows = $this->db->query($str);
 		}
 		
+		function getInd($node_id){
+			$str = "SELECT ind FROM nodes WHERE node_id='".$node_id."'";
+			$this->rows = $this->db->query($str);
+			$curr = $this->db->getArray($this->rows);
+			return $curr[0];
+		}
+		
 		function getNext(){
 			if(!$this->rows){
 				throw new Exception("Couldn't run query");
@@ -116,7 +123,8 @@
 			$rowsEdges = $this->db->query($str);
 			$ans = array();
 			while($curr = $this->db->getArray($rowsEdges)){
-				$currIndex = $curr[0];
+				$nodesInd = new Nodes();
+				$currIndex = $nodesInd->getInd($curr[0]);
 				array_push($ans,$currIndex);
 			}
 			return $ans;
@@ -132,6 +140,12 @@
 		function __construct(){
 			$this->db = new Database();
 			$this->nodes = new Nodes();
+		}
+		
+		function getGraphById($graph_id){
+			$str = "SELECT graph_id,graph_name,member_id FROM graphs WHERE graph_id='".$graph_id."'";
+			$this->rows = $this->db->query($str);
+			return $this->getNext();
 		}
 		
 		function fetchAllByMember($member_id){
