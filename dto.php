@@ -83,6 +83,32 @@
 			}
 	}
 	
+	class Edge{
+		private $node1;
+		private $node2;
+		
+		function __construct($node1,$node2){
+			$this->node1 = $node1;
+			$this->node2 = $node2;
+		}
+		
+		function getNode1(){
+			return $this->node1;
+		}
+		
+		function getNode2(){
+			return $this->node2;
+		}
+		
+		function setNode1($node1){
+			$this->node1 = $node1;
+		}
+		
+		function setNode2($node2){
+			$this->node2 = $node2;
+		}
+	}
+	
 	class Graph{
 		private $id;
 		private $name;

@@ -46,10 +46,58 @@
 	height:100%;
 }
 
-.popupLogin{
-	visibility: hidden;
-    width: 35%;
+#popupGraph{
+	width:55%;
+	height:80%;
+	left:20%;
+	top:10;
+}
+
+#popupLogin{
+	width:35%;
 	height:55%;
+	left:30%;
+	top:10%;
+}
+
+#popupName{
+	width:35%;
+	height:25%;
+	left:30%;
+	top:10%;
+	font-size:16px;
+	color:black;
+}
+
+#popupName input[type=text]{
+	width:50%;
+	padding: 8px 10px;
+	margin:6px 0;
+	display:inline-block;
+	border:1px solid #ccc;
+	border-radius:4px;
+	box-sizing:border-box;
+}
+
+#popupName input[type=button]{
+	width:50%;
+	height:25px;
+	padding:4px 10px;
+	margin:4px 0;
+	border:none;
+	border-radius:4px;
+	background-color:#45a049;
+	color:white;
+}
+
+#popupName input[type=button]:hover{
+	background-color:#459249;
+}
+
+.popupLarge{
+	visibility: hidden;
+    width: 55%;
+	height:80%;
     background-color: #e8e8e8;
     color: #555;
     text-align: center;
@@ -57,7 +105,7 @@
 	border:2px solid;
 	border-color:black;
     padding: 0px 0;
-	left:30%;
+	left:20%;
 	top:10%;
     position: absolute;
     z-index: 3;
@@ -65,7 +113,7 @@
 	margin-bottom:100px;
 }
 
-.popupLoginShow{
+.popupLargeShow{
 	visibility: visible;
     -webkit-animation: fromTop 1s;
     animation: fromTop 1s

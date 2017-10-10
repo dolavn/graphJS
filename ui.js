@@ -1,6 +1,11 @@
 var navOpen=true;
 const NAV_WIDTH = 250;
 
+function setUpUI(){
+	drawNodes();
+	addListeners();
+}
+
 function openNav() {
     document.getElementById("toolbar").style.width = NAV_WIDTH + "px";
     document.getElementById("main").style.marginLeft = NAV_WIDTH + "px";
@@ -21,15 +26,40 @@ function disconnect(){
 	window.location="logout.php";
 }
 
+function openNamePopup(){
+	var popup = document.getElementById("popupName");
+	popup.classList.toggle("popupLargeShow");
+	document.getElementById("hiderName").style.visibility = "visible";		
+}
+
+function hideGraphName(){
+	var popup = document.getElementById("popupName");
+	popup.classList.toggle("popupLargeShow");
+	document.getElementById("hiderName").style.visibility = "hidden";		
+}
+
+
+function openLoadGraph(){
+	var popup = document.getElementById("popupGraph");
+	popup.classList.toggle("popupLargeShow");
+	document.getElementById("hiderLoadGraph").style.visibility = "visible";
+}
+
+function hideLoadGraph(){
+	var popup = document.getElementById("popupGraph");
+	popup.classList.toggle("popupLargeShow");
+	document.getElementById("hiderLoadGraph").style.visibility = "hidden";
+}
+
 function login(){
 	var popup = document.getElementById("popupLogin");
-	popup.classList.toggle("popupLoginShow");
+	popup.classList.toggle("popupLargeShow");
 	document.getElementById("hiderLogin").style.visibility = "visible";
 }
 
 function hideLogin(){
 	var popup = document.getElementById("popupLogin");
-	popup.classList.toggle("popupLoginShow");	
+	popup.classList.toggle("popupLargeShow");	
 	document.getElementById("hiderLogin").style.visibility = "hidden";
 }
 
@@ -54,6 +84,7 @@ function showPopupEdge(x,y,ind1,ind2){
 	popup.classList.toggle("popupShow");
 	popup.style.left=x;
 	popup.style.top=y;
+	console.log(ind2);
 	var string = "<input type=\"button\" value=\"Remove edge\" onClick=\"removeEdge(" + ind1 + "," + ind2+ ")\"><br>";
 	popup.innerHTML = string;
 }

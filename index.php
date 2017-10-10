@@ -5,7 +5,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="style.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="jquery.js"></script>
 <script src="ui.js"></script>
 <script src="dragAndDrop.js"></script>
 <script src ="jsDraw2D.js"></script>
@@ -13,10 +13,17 @@
 <script src="objects.js"></script>
 <script src="algorithm.js"></script>
 </head>
-<body>
+<body onLoad="setUpUI()">
 <div class="hider" id="hiderLogin" onClick="hideLogin()"></div>
+<div class="hider" id="hiderLoadGraph" onClick="hideLoadGraph()"></div>
+<div class="hider" id="hiderName" onClick="hideGraphName()"></div>
 <div class="popuptext" id="messagePopup"></div>
-<div class="popuplogin" id="popupLogin"><span class="closebtn" onClick="hideLogin()">&times;</span><iframe src="login.php" class="frame"></iframe></div>
+<div class="popupLarge" id="popupName"><span class="closebtn" onClick="hideGraphName()">&times;</span><br>Enter graph name:
+<input type="text" id="graphNameTxt" placeHolder="Your graph's name..."><br><br>
+<input type="button" onClick="changeGraphName()" value="Set name">
+</div>
+<div class="popupLarge" id="popupLogin"><span class="closebtn" onClick="hideLogin()">&times;</span><iframe src="login.php" class="frame"></iframe></div>
+<div class="popupLarge" id="popupGraph"><span class="closebtn" onClick="hideLoadGraph()">&times;</span><iframe src="graphSelection.php" class="frame"></iframe></div>
 <div class="sidenav" id="toolbar">
 <button class="hidebtn" onclick="closeNav()">Hide</button>
 <?php
@@ -28,10 +35,11 @@
 		$member = $members->getMemberById($_SESSION['member_id']);
 		$str = "Logged in as ".$member->getUserName();
 		$str = $str." <button class=\"redButton\" onClick=\"disconnect()\">Disconnect</button><br>";
-		$graphs->fetchAllByMember($member->getId());
-		while($graph = $graphs->getNext()){
-			$str = $str."<span onClick=\"loadGraph(".$graph->getId().")\">".$graph->getName()."</span><br>";
-		}
+		$str = $str."<div class=\"seperator\"></div>";
+		$str = $str."<div id=\"currentGraph\" onClick=\"openNamePopup()\"></div>";
+		$str = $str." <button class=\"greenButton\" onClick=\"saveGraph()\">Save graph</button><br>";
+		$str = $str."<div class=\"seperator\"></div>";
+		$str = $str." <span onClick=\"openLoadGraph()\">Load an existing graph</span><br>";
 	}else{
 		$str = "Not logged in.<button onClick=\"login()\" class=\"greenButton\">Log in</button>";
 		$str = $str."<button onClick=\"register()\" class=\"greenButton\">Register</button>";

@@ -1,0 +1,31 @@
+
+.drawCanvas{
+	width:200px;
+	height:200px;
+	position:relative;
+	background:white;
+	border-style:solid;
+	border-color:black;
+	border-width:2px;
+	border-bottom:none;
+}
+
+.gradient{
+	background:#4E4D4E;
+	background: -webkit-linear-gradient(white,#4E4D4E); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(white,#4E4D4E); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(white,#4E4D4E); /* For Firefox 3.6 to 15 */
+	color:black;
+    background: linear-gradient(white,#4E4D4E); /* Standard syntax */
+	font-size:16px;
+	font-family:verdana;
+	border-style:solid;
+	border-color:black;
+	border-width:2px;
+	height:25px;
+	border-top:none;
+}
+
+body{
+	background-color:#e8e8e8;
+}

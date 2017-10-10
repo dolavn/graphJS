@@ -4,11 +4,60 @@ var lastX=20; //The last x coordinate of the node selected before selection
 var lastY=20; //The last y coordinate of the node selected before selection
 var showDFSOutput=false; //If true, discovery time and finish time will be shown for each node
 var indNodeFrom=-1;
+var graphName = "Untitled graph";
+var currGraphId = -1;
+const CANVAS_WIDTH = 200;
+const CANVAS_HEIGHT = 200;
 const NODE_RADIUS=25; //The radius of the node
+const THUMBNAIL_RADIUS=10;
 
-function loadGraph(graph_id){
+function changeGraphName(){
+	var name = document.getElementById("graphNameTxt").value;
+	graphName = name;
+	hideGraphName();
+	drawNodes();
+}
+
+function loadGraphToMainCanvas(graph_id){
+	var nodes = loadGraph(graph_id,null,loadNodes);
+	hideLoadGraph();
+}
+
+function loadGraph(graph_id,callBackParams,callback){
 	var url = "loadGraph.php";
 	var params = "graph_id=" + graph_id;
+	var http = new XMLHttpRequest();
+	currGraphId=graph_id;
+	http.open("POST",url,true);
+	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	http.setRequestHeader("Content-length", params.length);
+	http.setRequestHeader("Connection", "close");
+	http.onreadystatechange = function() {//Call a function when the state changes.
+		if(http.readyState == 4 && http.status == 200) {
+			var nodes = decodeGraph(http.responseText);
+			if(params==null){
+				callback(nodes);
+			}else{
+				callback(nodes,callBackParams);
+			}
+		}
+	}
+	http.send(params);
+}
+
+function saveGraph(){
+	var url = "saveGraph.php";
+	var params = "graph_id=" + currGraphId + "&graph_name=" + graphName + "&nodes=";
+	for(i=0;i<nodes.length;i=i+1){
+		var node = nodes[i];
+		var nodeStr =  nodes[i].getDatabaseIndex() + "@" + nodes[i].ind + "@" + nodes[i].x + "@" + nodes[i].y;
+		for(j=0;j<node.neighbours.length;j=j+1){
+			nodeStr = nodeStr + "@" + node.neighbours[j];
+		}
+		params = params + nodeStr + "$";
+	}
+	params = params.substr(0,params.length-1);
+	alert(params);
 	var http = new XMLHttpRequest();
 	http.open("POST",url,true);
 	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -16,7 +65,7 @@ function loadGraph(graph_id){
 	http.setRequestHeader("Connection", "close");
 	http.onreadystatechange = function() {//Call a function when the state changes.
 		if(http.readyState == 4 && http.status == 200) {
-			decodeGraph(http.responseText);
+			alert(http.responseText);
 		}
 	}
 	http.send(params);
@@ -26,24 +75,26 @@ function decodeGraph(str){
 	str = str.substr(1,str.length-2);
 	var res = str.split("$");
 	var name = res[0];
+	graphName = name;
 	var nodes=[];
 	for(i=1;i<res.length;i=i+1){
 		var nodeStr = res[i].split("?");
-		var ind = parseInt(nodeStr[0]); var x = parseInt(nodeStr[1]); var y=parseInt(nodeStr[2]);
+		var id=parseInt(nodeStr[0]); var ind = parseInt(nodeStr[1]); var x = parseInt(nodeStr[2]); var y=parseInt(nodeStr[3]);
 		var currNode = new Node(x,y,ind);
-		for(j=3;j<nodeStr.length;j=j+1){
+		currNode.setDatabaseIndex(id);
+		for(j=4;j<nodeStr.length;j=j+1){
 			if(nodeStr[j]!=-1){
 				currNode.addNeighbour(parseInt(nodeStr[j]));
 			}
 		}
 		nodes.push(currNode);
 	}
-	loadNodes(nodes);
+	return nodes;
 }
 
 function loadNodes(newNodes){
 	nodes = newNodes;
-	nodeCount = newNodes.length;
+	nodeCount = nodes.length;
 	drawNodes();
 }
 
@@ -136,11 +187,44 @@ function removeNode(ind){
 	drawNodes();
 }
 
+function fillThumbnail(nodes,canvas){
+	var maxX = Number.NEGATIVE_INFINITY;
+	var maxY = Number.NEGATIVE_INFINITY;
+	var i;
+	for(i=0;i<nodes.length;i=i+1){
+		var node = nodes[i];
+		if(node.x>maxX){maxX = node.x;}
+		if(node.y>maxY){maxY = node.y;}
+	}
+	var ratioX = (CANVAS_WIDTH-THUMBNAIL_RADIUS)/maxX;
+	var ratioY = (CANVAS_HEIGHT-THUMBNAIL_RADIUS)/maxY;
+	for(i=0;i<nodes.length;i=i+1){
+		var node = nodes[i];
+		var x = node.x*ratioX;
+		var y = node.y*ratioY;
+		drawCircle(x,y,THUMBNAIL_RADIUS,"black",canvas);
+		for(var j=0;j<node.neighbours.length;j=j+1){
+			var neighbour = nodes[node.neighbours[j]];
+			var otherX = neighbour.x*ratioX;
+			var otherY = neighbour.y*ratioY;
+			drawArrow(x,y,otherX,otherY,"black",SMALL_ARROW,THUMBNAIL_RADIUS,canvas);
+		}
+	}
+}
+
+function drawNodesThumbnail(graph_id){
+	var str = "graph" + graph_id;
+	canvas = document.getElementById(str);
+	loadGraph(graph_id,canvas,fillThumbnail);
+}
+
 /**
 	Draws all the nodes to the screen
 */
 function drawNodes(){
-	clearCanvas();
+	var canvas = document.getElementById("drawCanvas");
+	document.getElementById("currentGraph").innerHTML = graphName;
+	clearCanvas(canvas);
 	var txt="<table id=\"dataTable\" cellspacing=0><tr><th>Node</th><th>Parent</th><th>SCC</th></tr>"; //Creates the table of the nodes
 	for(i=0;i<nodes.length;i=i+1){
 		var width=$(drawCanvas).width();
@@ -167,17 +251,17 @@ function drawNodes(){
 				color = "blue";
 			}
 			var other = nodes[nodes[i].neighbours[j]];
-			drawArrow(x,y,other.getX(),other.getY(),color); //Draws edges
+			drawArrow(x,y,other.getX(),other.getY(),color,BIG_ARROW,NODE_RADIUS,canvas); //Draws edges
 			color = "black";
 		}
 		if(nodes[i].selected){
 			color = "blue";
 			rowType = "selectedRow";
 		}
-		drawCircle(x,y,NODE_RADIUS,color); //Draws the node
+		drawCircle(x,y,NODE_RADIUS,color,canvas); //Draws the node
 		if(showDFSOutput){
 			var txtD = "d:" + nodes[i].getDiscovery() + "\n" + "f:" + nodes[i].getFinish(); //Draws the text on the node
-			drawText(x-NODE_RADIUS/2,y-NODE_RADIUS/2,txtD);		
+			drawText(x-NODE_RADIUS/2,y-NODE_RADIUS/2,txtD,canvas);		
 		}
 		txt = txt + "<tr id=\"" + rowType + "\"><td>" + i + "</td><td>" + nodes[i].pare + "</td><td>" + nodes[i].scc + "</td></tr>"; //Adds this node's row to the table
 	}
@@ -234,7 +318,6 @@ function transpose(){
 	@param ind2 The index of the second node.
 */
 function createEdge(ind1,ind2){
-	console.log("creating");
 	var node1 = nodes[ind1];
 	var node2 = nodes[ind2];
 	node1.addNeighbour(ind2);
@@ -264,6 +347,7 @@ function Node(x,y,ind){
 	this.pare = -1; //Parent of the node, used for DFS search
 	this.scc = -1; //The strongly connected component of this node.
 	this.f=-1; //Finish time of the node, used for DFS search
+	this.dbID=-1 //The index stored in the database
 }
 
 Node.prototype={
@@ -277,6 +361,14 @@ Node.prototype={
 		this.neighbours.push(ind);
 	},
 	/**
+		Sets the database index of this node.
+		
+		@param id The database index.
+	*/
+	setDatabaseIndex:function(id){
+		this.dbID = id;
+	},
+	/**
 		Sets the location of this node.
 		
 		@param x The x coordinate of the node.
@@ -286,6 +378,14 @@ Node.prototype={
 		this.x = x;
 		this.y = y;
 		drawNodes();
+	},
+	/**
+		Returns the database index of this node.
+		
+		@return The database index of this node.
+	*/
+	getDatabaseIndex:function(){
+		return this.dbID;
 	},
 	/**
 		Returns the x coordinate of this node.
@@ -425,7 +525,6 @@ Line.prototype={
 		if(this.vertical){
 			return x1;
 		}else{
-			console.log("get");
 			return (y-n)/m;
 		}
 	},

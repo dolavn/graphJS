@@ -100,6 +100,42 @@
 			return $curr[0];
 		}
 		
+		function getNextId(){
+			$str = "SELECT MAX(node_id) FROM nodes";
+			$this->rows = $this->db->query($str);
+			$curr = $this->db->getArray($this->rows);
+			$this->rows = false;
+			return $curr[0]+1;
+		}
+		
+		function updateNode($node){
+			$id = $node->getId();
+			$x = $node->getX();
+			$y = $node->getY();
+			$ind = $node->getInd();
+			$str = "UPDATE nodes SET x='".$x."'".", y='".$y."', ind='".$ind."' WHERE node_id='".$id."'";
+			$this->db->exec($str);
+			//echo($str."\n");
+		}
+		
+		function deleteNode($node_id){
+			$str = "DELETE FROM nodes WHERE node_id='".$node_id."'";
+			$this->db->exec($str);
+			//echo($str."\n");
+		}
+		
+		function addNode($node){
+			$id = $node->getId();
+			$x = $node->getX();
+			$y = $node->getY();
+			$ind = $node->getInd();
+			$graph_id = $node->getGraphId();
+			$str = "INSERT INTO nodes (node_id,x,y,ind,graph_id)
+					VALUES (".$id.",".$x.",".$y.",".$ind.",".$graph_id.")";
+			$this->db->exec($str);
+			//echo($str."\n");
+		}
+		
 		function getNext(){
 			if(!$this->rows){
 				throw new Exception("Couldn't run query");
@@ -131,6 +167,49 @@
 		}
 	}
 	
+	class Edges{
+		private $db;
+		private $rows;
+		
+		function __construct(){
+			$this->db = new Database();
+		}
+		
+		function fetchAll(){
+			$str = "SELECT first_node,second_node FROM edges";
+			$this->rows = $this->db->query($str);
+		}
+		
+		function getNext(){
+			if(!$this->rows){
+				throw new Exception("Couldn't run query");
+			}
+			$curr = $this->db->getArray($this->rows);
+			if(!$curr){
+				return false;
+			}else{
+				$first_node = $curr[0];
+				$second_node = $curr[1];
+				return new Edge($first_node,$second_node);
+			}
+		}
+		
+		function addEdge($edge){
+			$node1 = $edge->getNode1();
+			$node2 = $edge->getNode2();
+			$str = "INSERT INTO edges (first_node,second_node)
+					VALUES (".$node1.",".$node2.")";
+			$this->db->exec($str);
+			//echo($str."\n");
+		}
+		
+		function deleteEdgesFromNode($node_id){
+			$str = "DELETE FROM edges WHERE first_node='".$node_id."'";
+			$this->db->exec($str);
+			//echo($str."\n");
+		}
+	}
+	
 	class Graphs{
 		
 		private $db;
@@ -151,6 +230,30 @@
 		function fetchAllByMember($member_id){
 			$str = "SELECT graph_id,graph_name,member_id FROM graphs WHERE member_id=".$member_id;
 			$this->rows = $this->db->query($str);
+		}
+		
+		function getNextId(){
+			$str = "SELECT MAX(graph_id) FROM graphs";
+			$this->rows = $this->db->query($str);
+			$curr = $this->db->getArray($this->rows);
+			$this->rows = false;
+			return $curr[0]+1;
+		}
+		
+		function addGraph($graph){
+			$graph_id = $graph->getId();
+			$graph_name = $graph->getName();
+			$member_id = $graph->getMemberId();
+			$str = "INSERT INTO graphs(graph_id,graph_name,member_id) 
+			VALUES ('".$graph_id."','".$graph_name."','".$member_id."')";
+			$this->db->exec($str);
+			//echo($str."\n");
+		}
+		
+		function setGraphName($graph_id,$graph_name){
+			$str = "UPDATE graphs SET graph_name='".$graph_name."' WHERE graph_id='".$graph_id."'";
+			$this->db->exec($str);
+			//echo($str."\n");
 		}
 		
 		function getNext(){

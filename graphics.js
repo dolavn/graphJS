@@ -1,22 +1,33 @@
-var gr; //The graphics object
 var init=false; //True if the graphics object was already initialized.
+var canvases = [];
 const ARROW_ANGLE=Math.PI/6; //The angle of an arrow
+const BIG_ARROW=20;
+const SMALL_ARROW=10;
 
 /**
-	Initializes the graphics object.
+	Returns the graphics objet belonging to a given canvas.
+	
+	@param canvas The given canvas
+	@return The graphics object belonging to this canvsa.
 */
-function initGraphics(){
-	gr = new jsGraphics(document.getElementById("drawCanvas"));
-	init=true;
+function getGraphics(canvas){
+	var k;
+	for(k=0;k<canvases.length;k=k+1){
+		if(canvas==canvases[k][0]){
+			return canvases[k][1];
+		}
+	}
+	gr = new jsGraphics(canvas);
+	currArr = [canvas,gr];
+	canvases.push(currArr);
+	return gr;
 }
 
 /**
 	Clears the canvas
 */
-function clearCanvas(){
-	if(!init){
-		initGraphics();
-	}
+function clearCanvas(canvas){
+	gr = getGraphics(canvas);
 	gr.clear();
 }
 
@@ -27,10 +38,8 @@ function clearCanvas(){
 	@param y1 The y coordinate of the string.
 	@param txt The string to be drawn.
 */
-function drawText(x1,y1,txt){
-	if(!init){
-		initGraphics();
-	}
+function drawText(x1,y1,txt,canvas){
+	gr = getGraphics(canvas);
 	var col = new jsColor("black");
 	var font = new jsFont("Arial","normal","x-small","normal","normal");
 	var point = new jsPoint(x1,y1);
@@ -45,10 +54,8 @@ function drawText(x1,y1,txt){
 	@param x2 The second x coordinate
 	@param y2 The second y coordinate
 */
-function drawLine(x1,y1,x2,y2,color){
-	if(!init){
-		initGraphics();
-	}
+function drawLine(x1,y1,x2,y2,color,canvas){
+	gr = getGraphics(canvas);
 	var col = new jsColor(color);
 	
 	var pen = new jsPen(col,3);
@@ -66,10 +73,8 @@ function drawLine(x1,y1,x2,y2,color){
 	@param radius The radius of the circle.
 	@param color The color of the circle.
 */
-function drawCircle(x1,y1,radius,color){
-	if(!init){
-		initGraphics();
-	}
+function drawCircle(x1,y1,radius,color,canvas){
+	gr = getGraphics(canvas);
 	var col = new jsColor(color);
 	var pen = new jsPen(col,3);
 	var pt = new jsPoint(x1,y1);
@@ -151,8 +156,7 @@ function getSlope(x1,y1,x2,y2){
 	@param x2 The second x coordinate
 	@param y2 The second y coordinate
 */
-function drawArrow(x1,y1,x2,y2,color){
-	var dist=20;
+function drawArrow(x1,y1,x2,y2,color,dist,radius,canvas){
 	var a = getAngle(x1,y1,x2,y2); //Gets the angle the line makes with the positive direction of the x axis.
 	var triangle1Ang=0;
 	var triangle2Ang=0;
@@ -173,10 +177,10 @@ function drawArrow(x1,y1,x2,y2,color){
 			coeff=-1;
 		}
 	}
-	var point = getCorrPoint(x1,y1,x2,y2,NODE_RADIUS); //Corrects the end point of the the arrow to be on the edge of the node.
+	var point = getCorrPoint(x1,y1,x2,y2,radius); //Corrects the end point of the the arrow to be on the edge of the node.
 	x2 = point['x'];
 	y2 = point['y'];
-	point = getCorrPoint(x2,y2,x1,y1,NODE_RADIUS); //Corrects the start point of the arrow to be on the edge of the node.
+	point = getCorrPoint(x2,y2,x1,y1,radius); //Corrects the start point of the arrow to be on the edge of the node.
 	x1 = point['x'];
 	y1 = point['y'];
 	/*
@@ -194,7 +198,7 @@ function drawArrow(x1,y1,x2,y2,color){
 	var nx2 = x2+dx2;
 	var ny1 = y2+dy1;
 	var ny2 = y2+dy2;
-	drawLine(x1,y1,x2,y2,color); //The main line.
-	drawLine(x2,y2,nx1,ny1,color); //Draws one half of the arrow head.
-	drawLine(x2,y2,nx2,ny2,color); //Draws the other half of the arrow head.
+	drawLine(x1,y1,x2,y2,color,canvas); //The main line.
+	drawLine(x2,y2,nx1,ny1,color,canvas); //Draws one half of the arrow head.
+	drawLine(x2,y2,nx2,ny2,color,canvas); //Draws the other half of the arrow head.
 }

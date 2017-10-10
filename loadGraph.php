@@ -15,8 +15,9 @@
 					$x = $node->getX();
 					$y = $node->getY();
 					$ind = $node->getInd();
+					$id = $node->getId();
 					$neighbours = $node->getNeighbours();
-					$str = $str.$ind."?".$x."?".$y."?";
+					$str = $str.$id."?".$ind."?".$x."?".$y."?";
 					if(count($neighbours)==0){
 						$str = $str."-1";
 					}

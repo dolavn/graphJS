@@ -4,6 +4,14 @@
 <?php
 	include('dao.php');
 	$members = new Members();
+	$edges = new Edges();
+	$nodes = new Nodes();
+	/*$node = new Node(1,25,25,0,1,0);
+	$node2 = new Node(2,100,80,1,1,0);
+	$nodes->addNode($node);
+	$nodes->addNode($node2);
+	$edge = new Edge(1,2);
+	$edges->addEdge($edge);*/
 	echo($members->getNextId()."<br><br>");
 	$members->fetchAll();
 	echo("<table border=1><tr><td>Id</td><td>User name</td><td>First name</td><td>Last name</td><td>Email</td><td>Password</td></tr>");
@@ -13,7 +21,7 @@
 		echo("</td><td>".$member->getLastName()."</td><td>".$member->getEmail()."</td><td>".$member->getPassword()."</td></tr>");
 	}
 	echo("</table>");
-	$nodes = new Nodes();
+	
 	echo("<br><br>");
 	echo("<table border=1><tr><td>Id</td><td>X</td><td>Y</td><td>Index</td><td>Graph id</td><td>Neighbours</td></tr>");
 	$nodes->fetchAllFromGraph(1);
@@ -35,6 +43,14 @@
 			echo($node->getId()." ");
 		}
 	}
+	
+	echo("</table><br><table border=1><tr><td>First node</td><td>Second node</td></tr>");
+	$edges->fetchAll();
+	while($edge = $edges->getNext()){
+		echo("<tr>");
+		echo("<td>".$edge->getNode1()."</td><td>".$edge->getNode2()."</td></tr>");
+	}
+	echo("</table>");
 ?>
 </body>
 </html>
