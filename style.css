@@ -230,6 +230,11 @@ body{
 	background-color:#459249;
 }
 
+.greenButton:disabled{
+	background-color:#6b6b6b;
+	color:white;
+}
+
 #main {
     transition: margin-left .5s;
 	margin-left:250px;

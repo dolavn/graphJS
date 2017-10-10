@@ -24,7 +24,7 @@
 	
 	echo("<br><br>");
 	echo("<table border=1><tr><td>Id</td><td>X</td><td>Y</td><td>Index</td><td>Graph id</td><td>Neighbours</td></tr>");
-	$nodes->fetchAllFromGraph(1);
+	$nodes->fetchAll();
 	while($node = $nodes->getNext()){
 		echo("<tr>");
 		echo("<td>".$node->getId()."</td><td>".$node->getX()."</td><td>".$node->getY()."</td><td>".$node->getInd());

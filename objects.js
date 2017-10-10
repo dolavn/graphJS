@@ -14,12 +14,14 @@ const THUMBNAIL_RADIUS=10;
 function changeGraphName(){
 	var name = document.getElementById("graphNameTxt").value;
 	graphName = name;
+	document.getElementById("saveButton").disabled=false;
 	hideGraphName();
 	drawNodes();
 }
 
 function loadGraphToMainCanvas(graph_id){
 	var nodes = loadGraph(graph_id,null,loadNodes);
+	document.getElementById("saveButton").disabled=false;
 	hideLoadGraph();
 }
 
@@ -48,15 +50,17 @@ function loadGraph(graph_id,callBackParams,callback){
 function saveGraph(){
 	var url = "saveGraph.php";
 	var params = "graph_id=" + currGraphId + "&graph_name=" + graphName + "&nodes=";
-	for(i=0;i<nodes.length;i=i+1){
-		var node = nodes[i];
-		var nodeStr =  nodes[i].getDatabaseIndex() + "@" + nodes[i].ind + "@" + nodes[i].x + "@" + nodes[i].y;
-		for(j=0;j<node.neighbours.length;j=j+1){
-			nodeStr = nodeStr + "@" + node.neighbours[j];
+	if(nodes.length>0){
+		for(i=0;i<nodes.length;i=i+1){
+			var node = nodes[i];
+			var nodeStr =  nodes[i].getDatabaseIndex() + "@" + nodes[i].ind + "@" + nodes[i].x + "@" + nodes[i].y;
+			for(j=0;j<node.neighbours.length;j=j+1){
+				nodeStr = nodeStr + "@" + node.neighbours[j];
+			}
+			params = params + nodeStr + "$";
 		}
-		params = params + nodeStr + "$";
+		params = params.substr(0,params.length-1);
 	}
-	params = params.substr(0,params.length-1);
 	alert(params);
 	var http = new XMLHttpRequest();
 	http.open("POST",url,true);
@@ -107,6 +111,7 @@ function calcCanvasWidth(){
 	Adds a new node to the node list.
 */
 function addNode(){
+	document.getElementById("saveButton").disabled=false;
 	var width = $(drawCanvas).width();
 	var height = $(drawCanvas).height();
 	var x = Math.random()*(width-NODE_RADIUS); //Random x coordinate

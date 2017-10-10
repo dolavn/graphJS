@@ -37,7 +37,7 @@
 		$str = $str." <button class=\"redButton\" onClick=\"disconnect()\">Disconnect</button><br>";
 		$str = $str."<div class=\"seperator\"></div>";
 		$str = $str."<div id=\"currentGraph\" onClick=\"openNamePopup()\"></div>";
-		$str = $str." <button class=\"greenButton\" onClick=\"saveGraph()\">Save graph</button><br>";
+		$str = $str." <button class=\"greenButton\" onClick=\"saveGraph()\"  id=\"saveButton\" disabled>Save graph</button><br>";
 		$str = $str."<div class=\"seperator\"></div>";
 		$str = $str." <span onClick=\"openLoadGraph()\">Load an existing graph</span><br>";
 	}else{

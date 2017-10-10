@@ -88,6 +88,11 @@
 			$this->db = new Database();
 		}
 		
+		function fetchAll(){
+			$str = "SELECT node_id,x,y,ind,graph_id FROM nodes";
+			$this->rows = $this->db->query($str);
+		}
+		
 		function fetchAllFromGraph($graph_id){
 			$str = "SELECT node_id,x,y,ind,graph_id FROM nodes WHERE graph_id=".$graph_id;
 			$this->rows = $this->db->query($str);
@@ -246,6 +251,20 @@
 			$member_id = $graph->getMemberId();
 			$str = "INSERT INTO graphs(graph_id,graph_name,member_id) 
 			VALUES ('".$graph_id."','".$graph_name."','".$member_id."')";
+			$this->db->exec($str);
+			//echo($str."\n");
+		}
+		
+		function deleteGraph($graph_id){
+			$nodes = new Nodes();
+			$edges = new Edges();
+			$nodes->fetchAllFromGraph($graph_id);
+			while($node=$nodes->getNext()){ //Delete all nodes of this graph from the data base.
+				$node_id = $node->getId();
+				$nodes->deleteNode($node_id); //Delete this node.
+				$edges->deleteEdgesFromNode($node_id); //Delete all edges from this node.
+			}
+			$str = "DELETE FROM graphs WHERE graph_id='".$graph_id."'";
 			$this->db->exec($str);
 			//echo($str."\n");
 		}

@@ -26,6 +26,22 @@
 	border-top:none;
 }
 
+.deleteButton{
+	color: #d80003;
+    float: right;
+	margin-right:10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.deleteButton:hover,
+.deleteButton:focus{
+	color: #700000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
 body{
 	background-color:#e8e8e8;
 }
