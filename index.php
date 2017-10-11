@@ -17,6 +17,13 @@
 <div class="hider" id="hiderLogin" onClick="hideLogin()"></div>
 <div class="hider" id="hiderLoadGraph" onClick="hideLoadGraph()"></div>
 <div class="hider" id="hiderName" onClick="hideGraphName()"></div>
+<div class="commentsModal" id="comments">
+<div class="commentsModalText" id="commentsBody">
+<p id="titleComment"></p>
+<p id="textComment"></p>
+</div>
+<div class="gradient"></div>
+</div>
 <div class="popuptext" id="messagePopup"></div>
 <div class="popupLarge" id="popupName"><span class="closebtn" onClick="hideGraphName()">&times;</span><br>Enter graph name:
 <input type="text" id="graphNameTxt" placeHolder="Your graph's name..."><br><br>
@@ -55,6 +62,7 @@
 <input type="button" onClick="findSCC(nodes)" value="Find SCC">
 <div class="seperator"></div>
 <div id="messages"></div>
+<div class="seperator"></div>
 </div>
 <div id="main">
 <input type="button" onclick="openNav()" id="showToolBar" value="Show tool bar">

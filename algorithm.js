@@ -1,4 +1,5 @@
 var time=0;
+var delayAlg=1000;
 
 function DFSInit(nodes){
 	var i;
@@ -66,30 +67,39 @@ function runDFSNode(nodes,ind){
 
 function runDFS(nodes){
 	var i;
-	DFSInit(nodes);
-	for(i=0;i<nodes.length;i=i+1){
-		if(nodes[i].getColor()==0){
-			dfsVisit(nodes[i],nodes);
+	var string = "For each node	v&isin;V do:<br><p style=\"margin-left: 40px\">";
+	string = string + "d[u]&larr;-&nbsp;&infin;<br>&pi;[u]&larr;null<br>";
+	string = string + "color[u]&larr;white";
+	showComment("Initialization",string,300,function(){
+		DFSInit(nodes);
+		for(i=0;i<nodes.length;i=i+1){
+			if(nodes[i].getColor()==0){
+				dfsVisit(nodes[i],nodes);
+			}
 		}
-	}
-	showDFSOutput=true;
-	drawNodes();
+		showDFSOutput=true;
+		drawNodes();
+	},6000);
 }
 
 function dfsVisit(node,cnodes){
-	node.color = 1;
-	node.d = time;
-	time = time + 1;
-	for(i=0;i<node.neighbours.length;i=i+1){
-		neighbour = cnodes[node.neighbours[i]];
-		if(neighbour.getColor()==0){
-			neighbour.pare = node.ind;
-			dfsVisit(neighbour,cnodes);
+	console.log("visiting");
+	showPopupNodeMessage(node.ind,"DFS visiting this node",1500,function(){
+		node.color = 1;
+		node.d = time;
+		time = time + 1;
+		for(i=0;i<node.neighbours.length;i=i+1){
+			neighbour = cnodes[node.neighbours[i]];
+			if(neighbour.getColor()==0){
+				neighbour.pare = node.ind;
+				dfsVisit(neighbour,cnodes);
+			}
 		}
-	}
-	node.color = 2;
-	node.f = time;
-	time = time + 1;
+		node.color = 2;
+		node.f = time;
+		time = time + 1;
+		drawNodes();
+	});
 }
 
 function createTranspose(nodes){

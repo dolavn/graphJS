@@ -8,7 +8,7 @@ const SMALL_ARROW=10;
 	Returns the graphics objet belonging to a given canvas.
 	
 	@param canvas The given canvas
-	@return The graphics object belonging to this canvsa.
+	@return The graphics object belonging to this canvas.
 */
 function getGraphics(canvas){
 	var k;
@@ -25,6 +25,8 @@ function getGraphics(canvas){
 
 /**
 	Clears the canvas
+	
+	@param canvas The divobject to be cleared.
 */
 function clearCanvas(canvas){
 	gr = getGraphics(canvas);
@@ -37,10 +39,12 @@ function clearCanvas(canvas){
 	@param x1 The x coordinate of the string.
 	@param y1 The y coordinate of the string.
 	@param txt The string to be drawn.
+	@param color The color of the text.
+	@param canvas The divobject on which to draw the text.
 */
-function drawText(x1,y1,txt,canvas){
+function drawText(x1,y1,txt,color,canvas){
 	gr = getGraphics(canvas);
-	var col = new jsColor("black");
+	var col = new jsColor(color);
 	var font = new jsFont("Arial","normal","x-small","normal","normal");
 	var point = new jsPoint(x1,y1);
 	gr.drawText(txt,point,font,col,2,"center");
@@ -53,6 +57,7 @@ function drawText(x1,y1,txt,canvas){
 	@param y1 The first y coordinate
 	@param x2 The second x coordinate
 	@param y2 The second y coordinate
+	@param canvas The divobject on which to draw the line.
 */
 function drawLine(x1,y1,x2,y2,color,canvas){
 	gr = getGraphics(canvas);
@@ -66,12 +71,29 @@ function drawLine(x1,y1,x2,y2,color,canvas){
 }
 
 /**
+	Fills a circle in the screen.
+	
+	@param x1 The x coordinate of the circle's center
+	@param y1 The y coordinate of the circle's center
+	@param radius The radius of the circle
+	@param color The color of the circle
+	@param canvas The divobject on which to fill the circle.
+*/
+function fillCircle(x1,y1,radius,color,canvas){
+	gr = getGraphics(canvas);
+	var col = new jsColor(color);
+	var pt = new jsPoint(x1,y1);
+	gr.fillCircle(col,pt,radius);
+}
+
+/**
 	Draws a circle to the screen.
 	
 	@param x1 The x coordinate of the circle's center.
 	@param y1 The y coordinate of the circle's center.
 	@param radius The radius of the circle.
 	@param color The color of the circle.
+	@param canvas The divobject on which to fill the circle.
 */
 function drawCircle(x1,y1,radius,color,canvas){
 	gr = getGraphics(canvas);
@@ -155,6 +177,10 @@ function getSlope(x1,y1,x2,y2){
 	@param y1 The first y coordainte
 	@param x2 The second x coordinate
 	@param y2 The second y coordinate
+	@param color The color of the arrow
+	@param dist The length of the arrow's head
+	@param radius The offset of each end of the arrow
+	@param canvas The divobject on which to fill the circle.
 */
 function drawArrow(x1,y1,x2,y2,color,dist,radius,canvas){
 	var a = getAngle(x1,y1,x2,y2); //Gets the angle the line makes with the positive direction of the x axis.

@@ -1,3 +1,58 @@
+.commentsModal{
+	visibility:hidden;
+	width: 100%; /* 100% Full-width */
+    height: 200px; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 3; /* Stay on top */
+    top: 0;
+    left: 0;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 0px; /* Place content 60px from the top */
+    transition: 1s; /* 0.5 second transition effect to slide in the sidenav */
+	color:white;
+}
+
+.commentsModalText{
+	width:100%;
+	height:120px;
+	font-size:28px;
+	padding:10px;
+	text-align:center;
+	background-color:#2d2d2d;
+}
+
+#titleComment{
+	font-size:28px;
+	margin:0;
+	padding:0;
+}
+
+#textComment{
+	font-size:20px;
+	margin:0;
+	padding:0;
+}
+
+.gradient{
+	background:#2d2d2d;
+	background: -webkit-linear-gradient(rgba(45,45,45,1),rgba(45,45,45,0)); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(rgba(45,45,45,1),rgba(45,45,45,0)); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(rgba(45,45,45,1),rgba(45,45,45,0)); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(rgba(45,45,45,1),rgba(45,45,45,0)); /* Standard syntax */
+	color:white;
+	font-size:16px;
+	font-family:verdana;
+	border-width:0;
+	height:50px;
+	width:100%;
+}
+
+.commentsModalShow{
+	visibility: visible;
+    -webkit-animation: fromTopModal 1s;
+    animation: fromTopModal 1s
+}
+
 .mainTable{
 	height:100%;
 	margin-bottom:5px;
@@ -149,6 +204,16 @@ body{
 	background-color:#e8e8e8;
 }
 
+@-webkit-keyframes fromTopModal{
+	from {top:-200px;}
+	to {top:0px;}
+}
+
+@-webkit fromTopModal{
+	from {top:-200px;}
+	to {top:0px;}
+}
+
 @-webkit-keyframes fromTop{
 	from {top:-200px;}
 	to {top:10%}
@@ -259,15 +324,6 @@ body{
 	position:relative;
 }	
 
-#messages{
-	margin-left:5px;
-}
-
-#messageBox{
-	width:800px;
-	height:80px;
-	border-width:0px;
-}
 #canvas{
 	width:400px;
 	height:400px;
@@ -299,18 +355,6 @@ body{
 #selectedRow{
 	background-color:#2d2d2d;
 	color:white;
-}
-
-#nodeControlPanel{
-	border:0px;
-	border-collapse:collapse;
-	visibility:collapse;
-}
-
-#edgeControlPanel{
-	border:0px;
-	border-collapse:collapse;
-	visibility:collapse;
 }
 
 #toolbar{

@@ -1,9 +1,27 @@
 var navOpen=true;
+var commentDelay=2000;
 const NAV_WIDTH = 250;
+
 
 function setUpUI(){
 	drawNodes();
 	addListeners();
+}
+
+function showComment(title,comment,height,callback,time){
+	var commModal = document.getElementById("comments");
+	commModal.style.height=height + "px";
+	document.getElementById("commentsBody").style.height=(height-80) + "px";
+	commModal.classList.toggle("commentsModalShow");
+	document.getElementById("titleComment").innerHTML = title;
+	document.getElementById("textComment").innerHTML = comment;
+	setTimeout(function(){hideComment(callback)},time);
+}
+
+function hideComment(callback){
+	var commModal = document.getElementById("comments");
+	commModal.classList.toggle("commentsModalShow");
+	callback();
 }
 
 function openNav() {
@@ -63,12 +81,29 @@ function hideLogin(){
 	document.getElementById("hiderLogin").style.visibility = "hidden";
 }
 
+function showPopupNodeMessage(ind,message,delay,callback){
+	var node = nodes[ind];
+	var x = node.x;
+	var y = node.y;
+	var pos = $(drawCanvas).position();
+	x = x + pos.left;
+	y = y + pos.top;
+	var popup = document.getElementById("messagePopup");
+	popup.classList.toggle("popupShow");
+	popup.style.left=x;
+	popup.style.top=y;
+	popup.style.width="300px";
+	popup.innerHTML = message;
+	setTimeout(function(){hidePopup();callback()},delay);
+}
+
 /* Shows popup for node panel */
 function showPopupNode(x,y,ind){
 	var popup = document.getElementById("messagePopup");
 	popup.classList.toggle("popupShow");
 	popup.style.left=x;
 	popup.style.top=y;
+	popup.style.width = "200px";
 	var string = "<input type=\"button\" value=\"Delete node\" onClick=\"removeNode(" + ind + ")\"><br>";
 	if(indNodeFrom==-1){
 		string = string + "<input type =\"button\" value=\"Edge from here\" onClick=\"edgeFrom(" + ind + ")\"><br>";
@@ -84,7 +119,7 @@ function showPopupEdge(x,y,ind1,ind2){
 	popup.classList.toggle("popupShow");
 	popup.style.left=x;
 	popup.style.top=y;
-	console.log(ind2);
+	popup.style.width = "200px";
 	var string = "<input type=\"button\" value=\"Remove edge\" onClick=\"removeEdge(" + ind1 + "," + ind2+ ")\"><br>";
 	popup.innerHTML = string;
 }

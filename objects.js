@@ -207,6 +207,7 @@ function fillThumbnail(nodes,canvas){
 		var node = nodes[i];
 		var x = node.x*ratioX;
 		var y = node.y*ratioY;
+		fillCircle(x,y,THUMBNAIL_RADIUS,"red",canvas);
 		drawCircle(x,y,THUMBNAIL_RADIUS,"black",canvas);
 		for(var j=0;j<node.neighbours.length;j=j+1){
 			var neighbour = nodes[node.neighbours[j]];
@@ -263,10 +264,18 @@ function drawNodes(){
 			color = "blue";
 			rowType = "selectedRow";
 		}
+		var txtColor = "black";
+		if(nodes[i].color==1){
+			fillCircle(x,y,NODE_RADIUS,"gray",canvas); //fills the node during dfs
+		}
+		if(nodes[i].color==2){
+			fillCircle(x,y,NODE_RADIUS,"black",canvas); //fills the node during dfs
+			txtColor = "white";
+		}
 		drawCircle(x,y,NODE_RADIUS,color,canvas); //Draws the node
 		if(showDFSOutput){
 			var txtD = "d:" + nodes[i].getDiscovery() + "\n" + "f:" + nodes[i].getFinish(); //Draws the text on the node
-			drawText(x-NODE_RADIUS/2,y-NODE_RADIUS/2,txtD,canvas);		
+			drawText(x-NODE_RADIUS/2,y-NODE_RADIUS/2,txtD,txtColor,canvas);		
 		}
 		txt = txt + "<tr id=\"" + rowType + "\"><td>" + i + "</td><td>" + nodes[i].pare + "</td><td>" + nodes[i].scc + "</td></tr>"; //Adds this node's row to the table
 	}

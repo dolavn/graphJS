@@ -87,9 +87,11 @@
 					$edges->addEdge($edge);
 				}
 				/*Deleting remaining nodes*/
-				foreach($existingNodes as $node_id){
-					if(isset($node_id)){
-						$nodes->deleteNode($node_id);
+				if(!$newGraph){
+					foreach($existingNodes as $node_id){
+						if(isset($node_id)){
+							$nodes->deleteNode($node_id);
+						}
 					}
 				}
 			}
