@@ -122,6 +122,7 @@ function addNode(){
 	nodeCount = nodeCount + 1;
 	node.setLocation(lastX,lastY); //Sets the node's location
 	nodes.push(node); //Adds the node to the nodes list
+	findSCC(nodes);
 	drawNodes(); //Draws the node
 }
 
@@ -207,7 +208,6 @@ function fillThumbnail(nodes,canvas){
 		var node = nodes[i];
 		var x = node.x*ratioX;
 		var y = node.y*ratioY;
-		fillCircle(x,y,THUMBNAIL_RADIUS,"red",canvas);
 		drawCircle(x,y,THUMBNAIL_RADIUS,"black",canvas);
 		for(var j=0;j<node.neighbours.length;j=j+1){
 			var neighbour = nodes[node.neighbours[j]];
@@ -339,6 +339,7 @@ function createEdge(ind1,ind2){
 	nodes[ind2].selected=false;
 	indNodeFrom = -1;
 	hidePopup();
+	findSCC(nodes);
 	drawNodes();
 }
 

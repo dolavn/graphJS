@@ -33,7 +33,7 @@ function findSCC(nodes){
 			}
 		}
 		if(maxInd!=-1){
-			dfsVisit(transp[maxInd],transp);
+			dfsVisit(maxInd,transp);
 			for(j=0;j<transp.length;j=j+1){
 				if(transp[j].color==2){
 					transp[j].color=3;
@@ -52,13 +52,12 @@ function findSCC(nodes){
 }
 
 function runDFSNode(nodes,ind){
-	console.log("hey");
 	hidePopup();
 	DFSInit(nodes);
-	dfsVisit(nodes[ind],nodes);
+	dfsVisit(ind,nodes);
 	for(i=0;i<nodes.length;i=i+1){
 		if(nodes[i].getColor()==0){
-			dfsVisit(nodes[i],nodes);
+			dfsVisit(i,nodes);
 		}
 	}
 	showDFSOutput=true;
@@ -66,40 +65,36 @@ function runDFSNode(nodes,ind){
 }
 
 function runDFS(nodes){
-	var i;
-	var string = "For each node	v&isin;V do:<br><p style=\"margin-left: 40px\">";
-	string = string + "d[u]&larr;-&nbsp;&infin;<br>&pi;[u]&larr;null<br>";
-	string = string + "color[u]&larr;white";
-	showComment("Initialization",string,300,function(){
-		DFSInit(nodes);
-		for(i=0;i<nodes.length;i=i+1){
-			if(nodes[i].getColor()==0){
-				dfsVisit(nodes[i],nodes);
-			}
+	DFSInit(nodes);
+	for(var i=0;i<nodes.length;i=i+1){
+		if(nodes[i].getColor()==0){
+			dfsVisit(i,nodes);
 		}
-		showDFSOutput=true;
-		drawNodes();
-	},6000);
+	}
+	resetColorsDFS(nodes);
 }
 
-function dfsVisit(node,cnodes){
-	console.log("visiting");
-	showPopupNodeMessage(node.ind,"DFS visiting this node",1500,function(){
-		node.color = 1;
-		node.d = time;
-		time = time + 1;
-		for(i=0;i<node.neighbours.length;i=i+1){
-			neighbour = cnodes[node.neighbours[i]];
-			if(neighbour.getColor()==0){
-				neighbour.pare = node.ind;
-				dfsVisit(neighbour,cnodes);
-			}
+function resetColorsDFS(nodes){
+	for(var i=0;i<nodes.length;i=i+1){
+		nodes[i].color = 0;
+	}
+}
+	
+function dfsVisit(ind,nodes){
+	console.log("visiting" + ind);
+	var node = nodes[ind];
+	node.color = 1;
+	node.d = time;
+	time = time+1;
+	for(var j=0;j<node.neighbours.length;j=j+1){
+		var neighbour = nodes[node.neighbours[j]];
+		if(neighbour.getColor()==0){
+			dfsVisit(node.neighbours[j],nodes);
 		}
-		node.color = 2;
-		node.f = time;
-		time = time + 1;
-		drawNodes();
-	});
+	}
+	node.f = time;
+	time = time + 1;
+	node.color = 2;
 }
 
 function createTranspose(nodes){

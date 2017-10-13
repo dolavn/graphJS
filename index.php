@@ -12,6 +12,7 @@
 <script src="graphics.js"></script>
 <script src="objects.js"></script>
 <script src="algorithm.js"></script>
+<script src="algorithmVis.js"></script>
 </head>
 <body onLoad="setUpUI()">
 <div class="hider" id="hiderLogin" onClick="hideLogin()"></div>
@@ -21,6 +22,7 @@
 <div class="commentsModalText" id="commentsBody">
 <p id="titleComment"></p>
 <p id="textComment"></p>
+<input type="button" onClick="dismissComment()" value="Dismiss" style="float:right; width:200px; margin-right:20px; margin-bottom:20px">
 </div>
 <div class="gradient"></div>
 </div>
@@ -31,6 +33,7 @@
 </div>
 <div class="popupLarge" id="popupLogin"><span class="closebtn" onClick="hideLogin()">&times;</span><iframe src="login.php" class="frame"></iframe></div>
 <div class="popupLarge" id="popupGraph"><span class="closebtn" onClick="hideLoadGraph()">&times;</span><iframe src="graphSelection.php" class="frame"></iframe></div>
+<div class="additionalInfoTab" id="additInfo"></div>
 <div class="sidenav" id="toolbar">
 <button class="hidebtn" onclick="closeNav()">Hide</button>
 <?php
@@ -45,8 +48,7 @@
 		$str = $str."<div class=\"seperator\"></div>";
 		$str = $str."<div id=\"currentGraph\" onClick=\"openNamePopup()\"></div>";
 		$str = $str." <button class=\"greenButton\" onClick=\"saveGraph()\"  id=\"saveButton\" disabled>Save graph</button><br>";
-		$str = $str."<div class=\"seperator\"></div>";
-		$str = $str." <span onClick=\"openLoadGraph()\">Load an existing graph</span><br>";
+		$str = $str." <br><button class=\"greenButton\" onClick=\"openLoadGraph()\">Load an existing graph</button><br>";
 	}else{
 		$str = "Not logged in.<button onClick=\"login()\" class=\"greenButton\">Log in</button>";
 		$str = $str."<button onClick=\"register()\" class=\"greenButton\">Register</button>";
@@ -57,9 +59,12 @@
 <input type="button" onClick="addNode()" value="Add node">
 <input type="button" onClick="getVertNum()" value="Get number of vertices">
 <input type="button" onClick="getEdgeNum()" value="Get number of edges">
-<input type="button" onClick="runDFS(nodes)" value="Run DFS">
+<input type="button" onClick="runDFSVis(nodes)" value="Run DFS">
 <input type="button" onClick="transpose()" value="Create Transpose">
 <input type="button" onClick="findSCC(nodes)" value="Find SCC">
+<div class="seperator"></div>
+<p style="font-size:16px">Algorithm Visualization Options:</p><p style="font-size:12px">Speed:</p>
+<input type="range" min="1" max = "10" value="9" class="slider" id="algorithmDelay" onChange="setDelay()">
 <div class="seperator"></div>
 <div id="messages"></div>
 <div class="seperator"></div>

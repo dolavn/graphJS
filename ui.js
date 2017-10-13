@@ -1,11 +1,20 @@
 var navOpen=true;
-var commentDelay=2000;
 const NAV_WIDTH = 250;
 
+var funcHideComment=function(){};
+var timeOutEvent;
 
 function setUpUI(){
 	drawNodes();
 	addListeners();
+}
+
+function dismissComment(){
+	console.log("dismissing");
+	funcHideComment();
+	clearTimeout(timeOutEvent);
+	timeOutEvent = null;
+	funcHideComment = function(){};
 }
 
 function showComment(title,comment,height,callback,time){
@@ -15,13 +24,21 @@ function showComment(title,comment,height,callback,time){
 	commModal.classList.toggle("commentsModalShow");
 	document.getElementById("titleComment").innerHTML = title;
 	document.getElementById("textComment").innerHTML = comment;
-	setTimeout(function(){hideComment(callback)},time);
+	funcHideComment = function(){hideComment(callback);};
+	timeOutEvent = setTimeout(funcHideComment,time);
 }
 
 function hideComment(callback){
 	var commModal = document.getElementById("comments");
 	commModal.classList.toggle("commentsModalShow");
 	callback();
+}
+
+function openAdditionalInfo(){
+	var info = document.getElementById("additInfo");
+	info.style.visibility = "visible";
+	info.style.width = "15%";
+	info.style.left = "85%";
 }
 
 function openNav() {
