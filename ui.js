@@ -6,11 +6,37 @@ var timeOutEvent;
 
 function setUpUI(){
 	drawNodes();
+	document.getElementById("nodesTableCell").style.height=$(drawCanvas).height() + "px";
 	addListeners();
 }
 
+
+function showAdjMatrix(nodes){
+	var popup = document.getElementById("popupMatrix");
+	popup.classList.toggle("popupLargeShow");
+	var matrix = getAdjMatrix(nodes);
+	var str="<table class=\"matrixTable\"><tr><td style=\"background-color:black;\"></td>";
+	for(var i=0;i<matrix.length;i=i+1){
+		str = str + "<td style=\"background-color:grey;\">" + i + "</td>";
+	}
+	str = str + "</tr>";
+	for(var i=0;i<matrix.length;i=i+1){
+		str = str + "<tr><td style=\"background-color:grey;\">" + i + "</td>"
+		for(var j=0;j<matrix[i].length;j=j+1){
+			str = str + "<td>" + matrix[i][j] + "</td>";
+		}
+		str = str + "</tr>";
+	}
+	str = str + "</table>";
+	document.getElementById("matrixData").innerHTML = str;
+}
+
+function hideMatrix(){
+	var popup = document.getElementById("popupMatrix");
+	popup.classList.toggle("popupLargeShow");
+}
+
 function dismissComment(){
-	console.log("dismissing");
 	funcHideComment();
 	clearTimeout(timeOutEvent);
 	timeOutEvent = null;
@@ -36,9 +62,20 @@ function hideComment(callback){
 
 function openAdditionalInfo(){
 	var info = document.getElementById("additInfo");
+	var width = $(nodesTableCell).width();
 	info.style.visibility = "visible";
-	info.style.width = "15%";
-	info.style.left = "85%";
+	info.style.width = width + "px";
+	info.style.left = ($(document).width()-width) + "px";
+}
+
+function dismissAdditInfo(){
+	DFSInit(nodes);
+	drawNodes();
+	var info = document.getElementById("additInfo");
+	info.style.left = ($(document).width());
+	info.style.width = "0";
+	info.style.visibility = "hidden";
+	
 }
 
 function openNav() {
@@ -127,7 +164,7 @@ function showPopupNode(x,y,ind){
 	}else if(indNodeFrom!=ind){
 		string = string + "<input type =\"button\" value=\"Edge to here\" onClick=\"createEdge(" + indNodeFrom + "," + ind +")\"><br>";
 	}
-	string = string + "<input type=\"button\" value=\"Run DFS from here\" onClick=\"runDFSNode(nodes," + ind + ")\">";
+	string = string + "<input type=\"button\" value=\"Run DFS from here\" onClick=\"runDFSVisFromNode(nodes," + ind + ")\">";
 	popup.innerHTML = string;
 }
 

@@ -1,9 +1,7 @@
 var time=0;
-var delayAlg=1000;
 
 function DFSInit(nodes){
-	var i;
-	for(i=0;i<nodes.length;i=i+1){
+	for(var i=0;i<nodes.length;i=i+1){
 		var node = nodes[i];
 		node.d=-1;
 		node.f=-1;
@@ -11,6 +9,32 @@ function DFSInit(nodes){
 		node.color=0;
 		node.pare=-1;
 	}
+}
+
+function getNodesFromMatrix(mat,nodes){
+	for(var i=0;i<nodes.length;i=i+1){
+		for(var j=0;j<nodes.length;j=j+1){
+			if(mat[i][j]==1){
+				nodes[i].addNeighbour(j);
+			}
+		}
+	}
+	return nodes;
+}
+
+function getAdjMatrix(nodes){
+	var ans = [];
+	for(var i=0;i<nodes.length;i=i+1){
+		var matrixRow = new Array(nodes.length);
+		for(var j=0;j<matrixRow.length;j=j+1){
+			matrixRow[j]=0;
+		}
+		for(var j=0;j<nodes[i].neighbours.length;j=j+1){
+			matrixRow[nodes[i].neighbours[j]]=1;
+		}
+		ans.push(matrixRow);
+	}
+	return ans;
 }
 
 function findSCC(nodes){
@@ -95,6 +119,24 @@ function dfsVisit(ind,nodes){
 	node.f = time;
 	time = time + 1;
 	node.color = 2;
+}
+
+function complGraph(nodes){
+	var newNodes = [];
+	for(var i=0;i<nodes.length;i=i+1){ //O(N)
+		var newNode = nodes[i].copyNoNeigh();
+		newNodes.push(newNode);
+	}
+	var matrix = getAdjMatrix(nodes); //O(N^2)
+	for(var i=0;i<matrix.length;i=i+1){
+		for(var j=0;j<matrix[i].length;j=j+1){
+			if(i!=j){
+				matrix[i][j] = 1 - matrix[i][j];
+			}
+		}
+	}
+	newNodes = getNodesFromMatrix(matrix,newNodes); //O(N^2)
+	return newNodes;
 }
 
 function createTranspose(nodes){

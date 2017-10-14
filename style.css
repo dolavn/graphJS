@@ -56,7 +56,49 @@
 .mainTable{
 	height:100%;
 	margin-bottom:5px;
+	margin-top:0;
+	width:100%;
 }
+
+.DFSNodesTable{
+	width:90%;
+	margin:5%;
+	background-color:#cecece;
+	color:black;
+	font-family:verdana;
+	font-size:14px;
+}
+
+.DFSNodesTable th{
+	font-size:16px;
+	background-color:#898989
+}
+
+.nodesTable{
+	width:100%;
+	height:100%;
+	table-layout:auto;
+	border: 1px solid black;
+	border-collapse:collapse;
+}
+
+.nodesTable td{
+	background-color:white;
+	vertical-align:top;
+	font-size:12px;
+	border: 1px solid black;
+}
+
+.nodesTable td:empty{
+  border-left: 0;
+  border-right: 0;	
+}
+
+.nodesTable input[type=button]{
+	font-size:12px;
+	height:16px;
+}
+
 
 .popup {
     position: relative;
@@ -124,6 +166,13 @@
 	color:black;
 }
 
+#popupMatrx{
+	width:40%;
+	height:40%;
+	top:30%;
+	left:30%
+}
+
 #popupName input[type=text]{
 	width:50%;
 	padding: 8px 10px;
@@ -149,6 +198,21 @@
 	background-color:#459249;
 }
 
+.matrixTable{
+	width:100%;
+	height:100%;	
+	border:1px solid black;
+	border-collapse:collapse;
+	background-color:white;
+}
+
+.matrixTable tr td{
+	border:1px solid black;
+	text-align:center;
+	vertical-align:center;
+}
+
+
 .popupLarge{
 	visibility: hidden;
     width: 55%;
@@ -171,7 +235,7 @@
 .popupLargeShow{
 	visibility: visible;
     -webkit-animation: fromTop 1s;
-    animation: fromTop 1s
+    animation: fromTop 1s;
 }
 
 .popuptext{
@@ -194,14 +258,13 @@
     animation: fadeIn 1s
 }
 
-table{
-	margin-top:0;
-	width:100%;
-	height:10px;
-}
-
 body{
 	background-color:#e8e8e8;
+}
+
+@-webkit fromTopModal{
+	from {top:-200px;}
+	to {top:0px;}
 }
 
 @-webkit-keyframes fromTopModal{
@@ -224,7 +287,6 @@ body{
 	to {top:10%}	
 }
 
-/* Add animation (fade in the popup) */
 @-webkit-keyframes fadeIn {
     from {opacity: 0;}
     to {opacity: 1;}
@@ -330,12 +392,21 @@ body{
 	width:100%;
 }
 
-#nodesTable{
+#nodesTableCell{
 	width:100%;
 	height:100%;
 	margin-left:5px;
 	position:relative;
+	overflow-y:auto;
 }	
+/*
+#nodesTable{
+	width:100%;
+	height:100%;
+	background-color:#bfbfbf;
+	color:black;
+	font-family:verdana;
+}*/
 
 #canvas{
 	width:400px;
@@ -465,3 +536,70 @@ input[type=button]:hover{
 #popupLogin input[type=submit]:hover{
 	background-color:#459249;
 }
+
+/********Checkbox styling********/
+ /* Customize the label (the container) */
+.checkContainer {
+  display: block;
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 12px;
+  margin:2px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkContainer input{
+  position: absolute;
+  opacity: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 15px;
+  width: 15px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.checkContainer:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkContainer input:checked ~ .checkmark {
+  background-color: #459249;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkContainer input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkContainer .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 2px;
+  height: 5px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+} 

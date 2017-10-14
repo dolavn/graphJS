@@ -15,9 +15,12 @@
 <script src="algorithmVis.js"></script>
 </head>
 <body onLoad="setUpUI()">
+<!--Hiders div elements-->
 <div class="hider" id="hiderLogin" onClick="hideLogin()"></div>
 <div class="hider" id="hiderLoadGraph" onClick="hideLoadGraph()"></div>
 <div class="hider" id="hiderName" onClick="hideGraphName()"></div>
+<!--End of hider div elements-->
+<!--Popups div elements-->
 <div class="commentsModal" id="comments">
 <div class="commentsModalText" id="commentsBody">
 <p id="titleComment"></p>
@@ -33,6 +36,10 @@
 </div>
 <div class="popupLarge" id="popupLogin"><span class="closebtn" onClick="hideLogin()">&times;</span><iframe src="login.php" class="frame"></iframe></div>
 <div class="popupLarge" id="popupGraph"><span class="closebtn" onClick="hideLoadGraph()">&times;</span><iframe src="graphSelection.php" class="frame"></iframe></div>
+<div class="popupLarge" id="popupMatrix"><span class="closebtn" onClick="hideMatrix()">&times;</span>
+<div id="matrixData" style="margin-left:10%;margin-top:5%;width:80%;height:80%;"></div>
+</div>
+<!--End of popups div elements-->
 <div class="additionalInfoTab" id="additInfo"></div>
 <div class="sidenav" id="toolbar">
 <button class="hidebtn" onclick="closeNav()">Hide</button>
@@ -61,6 +68,7 @@
 <input type="button" onClick="getEdgeNum()" value="Get number of edges">
 <input type="button" onClick="runDFSVis(nodes)" value="Run DFS">
 <input type="button" onClick="transpose()" value="Create Transpose">
+<input type="button" onClick="complement()" value="Create complement graph">
 <input type="button" onClick="findSCC(nodes)" value="Find SCC">
 <div class="seperator"></div>
 <p style="font-size:16px">Algorithm Visualization Options:</p><p style="font-size:12px">Speed:</p>
@@ -74,6 +82,6 @@
 <table class="mainTable"><tr><td style="width:80%">
 <div id="drawCanvas" oncontextmenu="rightClick(event)">
 </div></td>
-<td style="width:20%"><div id="nodesTable"></div></td></table>
+<td style="width:20%"><div id="nodesTableCell"></div></td></table>
 </body>
 </html>

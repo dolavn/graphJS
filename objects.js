@@ -23,6 +23,7 @@ function loadGraphToMainCanvas(graph_id){
 	var nodes = loadGraph(graph_id,null,loadNodes);
 	document.getElementById("saveButton").disabled=false;
 	hideLoadGraph();
+	
 }
 
 function loadGraph(graph_id,callBackParams,callback){
@@ -99,6 +100,7 @@ function decodeGraph(str){
 function loadNodes(newNodes){
 	nodes = newNodes;
 	nodeCount = nodes.length;
+	findSCC(nodes);
 	drawNodes();
 }
 
@@ -178,7 +180,10 @@ function removeNode(ind){
 		}
 	}
 	nodes.splice(ind,1);
-	for(i=ind;i<nodes.length;i=i+1){
+	/*
+		Offsetting all the indices of the nodes whose index is greater then i by 1
+	*/
+	for(i=ind;i<nodes.length;i=i+1){ 
 		var node = nodes[i];
 		node.ind = node.ind - 1;
 	}
@@ -231,7 +236,8 @@ function drawNodes(){
 	var canvas = document.getElementById("drawCanvas");
 	document.getElementById("currentGraph").innerHTML = graphName;
 	clearCanvas(canvas);
-	var txt="<table id=\"dataTable\" cellspacing=0><tr><th>Node</th><th>Parent</th><th>SCC</th></tr>"; //Creates the table of the nodes
+	var txt = "<table class=\"nodesTable\"><tr style=\"height:100px\"><td><input type=\"button\" onClick=\"showAdjMatrix(nodes)\" value=\"Show adjacency matrix\"></td></tr>";
+	//var txt="<table id=\"dataTable\" cellspacing=0><tr><th>Node</th><th>Parent</th><th>SCC</th></tr>"; //Creates the table of the nodes
 	for(i=0;i<nodes.length;i=i+1){
 		var width=$(drawCanvas).width();
 		var height=$(drawCanvas).height();
@@ -247,40 +253,52 @@ function drawNodes(){
 		if(nodes[i].getY()<NODE_RADIUS){
 			nodes[i].y = NODE_RADIUS;
 		}
-		var x = nodes[i].getX();
-		var y = nodes[i].getY();
-		var color="black";
-		var rowType="regularRow";
-		for(j=0;j<nodes[i].neighbours.length;j=j+1){ //Goes over all the neighbours of the current node
-			color = "black";
-			if(selectedEdge[0]==i && selectedEdge[1]==j){
+		if(nodes[i].visible){
+			var x = nodes[i].getX();
+			var y = nodes[i].getY();
+			var color="black";
+			var rowSelected=false;
+			for(j=0;j<nodes[i].neighbours.length;j=j+1){ //Goes over all the neighbours of the current node
+				color = "black";
+				if(selectedEdge[0]==i && selectedEdge[1]==j){
+					color = "blue";
+				}
+				var other = nodes[nodes[i].neighbours[j]];
+				if(other.visible){
+					drawArrow(x,y,other.getX(),other.getY(),color,BIG_ARROW,NODE_RADIUS,canvas); //Draws edges
+					color = "black";
+				}
+			}
+			if(nodes[i].selected){
 				color = "blue";
 			}
-			var other = nodes[nodes[i].neighbours[j]];
-			drawArrow(x,y,other.getX(),other.getY(),color,BIG_ARROW,NODE_RADIUS,canvas); //Draws edges
-			color = "black";
+			var txtColor = "black";
+			if(nodes[i].color==1){
+				fillCircle(x,y,NODE_RADIUS,"gray",canvas); //fills the node during dfs
+			}
+			if(nodes[i].color==2){
+				fillCircle(x,y,NODE_RADIUS,"black",canvas); //fills the node during dfs
+				txtColor = "white";
+			}
+			drawCircle(x,y,NODE_RADIUS,color,canvas); //Draws the node
+			if(showDFSOutput){
+				var txtD = "d:" + nodes[i].getDiscovery() + "\n" + "f:" + nodes[i].getFinish(); //Draws the text on the node
+				drawText(x-NODE_RADIUS/2,y-NODE_RADIUS/2,txtD,txtColor,canvas);		
+			}
 		}
-		if(nodes[i].selected){
-			color = "blue";
-			rowType = "selectedRow";
-		}
-		var txtColor = "black";
-		if(nodes[i].color==1){
-			fillCircle(x,y,NODE_RADIUS,"gray",canvas); //fills the node during dfs
-		}
-		if(nodes[i].color==2){
-			fillCircle(x,y,NODE_RADIUS,"black",canvas); //fills the node during dfs
-			txtColor = "white";
-		}
-		drawCircle(x,y,NODE_RADIUS,color,canvas); //Draws the node
-		if(showDFSOutput){
-			var txtD = "d:" + nodes[i].getDiscovery() + "\n" + "f:" + nodes[i].getFinish(); //Draws the text on the node
-			drawText(x-NODE_RADIUS/2,y-NODE_RADIUS/2,txtD,txtColor,canvas);		
-		}
-		txt = txt + "<tr id=\"" + rowType + "\"><td>" + i + "</td><td>" + nodes[i].pare + "</td><td>" + nodes[i].scc + "</td></tr>"; //Adds this node's row to the table
+		
+		txt = txt + "<tr style=\"height:100px\"><td><div style=\"width:100%;height:25px;background-color:#4E4D4E;color:white\">";
+		txt = txt +"Node" + nodes[i].ind + "</div>";
+		txt = txt + "<label class=\"checkContainer\">Visible<input type=\"checkBox\"";
+		if(nodes[i].visible){ txt = txt + " checked=\"checked\"";}
+		txt =txt + " onClick=\"changeVis(" + i +")\">";
+		txt = txt + "<span class=\"checkmark\"></span></label>";
+		txt = txt + "SCC:" + nodes[i].scc;
+		txt = txt + "</td></tr>";
+		//txt = txt + "<tr id=\"" + rowType + "\"><td>" + i + "</td><td>" + nodes[i].pare + "</td><td>" + nodes[i].scc + "</td></tr>"; //Adds this node's row to the table
 	}
-	txt = txt + "</table>";
-	document.getElementById("nodesTable").innerHTML = txt;
+	txt = txt + "<tr><td></td></tr>";
+	document.getElementById("nodesTableCell").innerHTML  = txt;
 }
 
 /**
@@ -319,6 +337,14 @@ function hideControlPanel(){
 }
 
 /**
+	Creates the complement graph to the current graph.
+*/
+function complement(){
+	nodes = complGraph(nodes);
+	drawNodes();
+}
+
+/**
 	Revereses all the edges in the graph.
 */
 function transpose(){
@@ -344,6 +370,16 @@ function createEdge(ind1,ind2){
 }
 
 /**
+	Toggles the visibility of a given node.
+	
+	@param ind The index of the node.
+*/
+function changeVis(ind){
+	nodes[ind].visible = !nodes[ind].visible;
+	drawNodes();
+}
+
+/**
 	Constructs a new Node object
 	
 	@param x The x coordinate of the node.
@@ -363,6 +399,7 @@ function Node(x,y,ind){
 	this.scc = -1; //The strongly connected component of this node.
 	this.f=-1; //Finish time of the node, used for DFS search
 	this.dbID=-1 //The index stored in the database
+	this.visible =  true; //Visibility of this node
 }
 
 Node.prototype={
