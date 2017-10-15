@@ -113,7 +113,10 @@ function calcCanvasWidth(){
 	Adds a new node to the node list.
 */
 function addNode(){
-	document.getElementById("saveButton").disabled=false;
+        var saveButton = document.getElementById("saveButton");
+        if(saveButton!=null){
+            document.getElementById("saveButton").disabled=false;
+        }
 	var width = $(drawCanvas).width();
 	var height = $(drawCanvas).height();
 	var x = Math.random()*(width-NODE_RADIUS); //Random x coordinate
@@ -234,7 +237,10 @@ function drawNodesThumbnail(graph_id){
 */
 function drawNodes(){
 	var canvas = document.getElementById("drawCanvas");
-	document.getElementById("currentGraph").innerHTML = graphName;
+        var currGraphName = document.getElementById("currentGraph");
+        if(currGraphName!=null){
+            document.getElementById("currentGraph").innerHTML = graphName;
+        }
 	clearCanvas(canvas);
 	var txt = "<table class=\"nodesTable\"><tr style=\"height:100px\"><td><input type=\"button\" onClick=\"showAdjMatrix(nodes)\" value=\"Show adjacency matrix\"></td></tr>";
 	//var txt="<table id=\"dataTable\" cellspacing=0><tr><th>Node</th><th>Parent</th><th>SCC</th></tr>"; //Creates the table of the nodes

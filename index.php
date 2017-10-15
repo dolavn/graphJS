@@ -58,7 +58,7 @@
 		$str = $str." <br><button class=\"greenButton\" onClick=\"openLoadGraph()\">Load an existing graph</button><br>";
 	}else{
 		$str = "Not logged in.<button onClick=\"login()\" class=\"greenButton\">Log in</button>";
-		$str = $str."<button onClick=\"register()\" class=\"greenButton\">Register</button>";
+		$str = $str."<button onClick=\"register()\" class=\"greenButton\">Register</button><br>";
 	}
 	echo($str);
 ?>
