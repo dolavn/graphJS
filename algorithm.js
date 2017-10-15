@@ -157,3 +157,27 @@ function createTranspose(nodes){
 	}
 	return newNodes;
 }
+
+/**
+    Class queue for javascript.
+    @author Dolav Nitay
+ */
+
+function Queue(){
+    this.arr = [];
+}
+
+Queue.protoype={
+    constructor:Queue,
+    
+    enqueue:function(obj){
+        this.arr.push(obj);
+    },
+    deque:function(obj){
+        var ans = this.arr.shift();
+        return ans;
+    },
+    length:function(){
+        return ans.length;
+    }
+}

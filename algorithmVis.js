@@ -1,5 +1,7 @@
 const INIT_DFS_HEIGHT=300;
 const INIT_DFS_TIME=600;
+const INIT_BFS_HEIGHT = INIT_DFS_HEIGHT;
+const INIT_BFS_TIME = INIT_BFS_TIME;
 var popupNodeDelay=1500;
 
 
@@ -9,6 +11,10 @@ var popupNodeDelay=1500;
 function setDelay(){
 	var slider = document.getElementById("algorithmDelay");
 	popupNodeDelay = (10.5-parseInt(slider.value))*1000;
+}
+
+function runBFSVisFromNode(nodes,ind){
+    
 }
 
 function runDFSVisFromNode(nodes,ind){
