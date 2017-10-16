@@ -4,7 +4,7 @@
 	$scriptStr="<script>function loadGraphs(){";
 	if(isset($_SESSION['member_id'])){
 		include("dao.php");
-		define('MAX_NUM_IN_ROW',5);
+		define('MAX_NUM_IN_ROW',3);
 		$member_id = $_SESSION['member_id'];
 		$graphs = new Graphs();
 		$graphs->fetchAllByMember($member_id);

@@ -54,6 +54,8 @@
 		$str = $str." <button class=\"redButton\" onClick=\"disconnect()\">Disconnect</button><br>";
 		$str = $str."<div class=\"seperator\"></div>";
 		$str = $str."<div id=\"currentGraph\" onClick=\"openNamePopup()\"></div>";
+		$str = $str."<label class=\"checkContainer\">Directed<input type=\"checkBox\" checked=\"checked\" onClick=\"setDirected()\">";
+		$str = $str."<span class=\"checkmark\"></span></label>";
 		$str = $str." <button class=\"greenButton\" onClick=\"saveGraph()\"  id=\"saveButton\" disabled>Save graph</button><br>";
 		$str = $str." <br><button class=\"greenButton\" onClick=\"openLoadGraph()\">Load an existing graph</button><br>";
 	}else{

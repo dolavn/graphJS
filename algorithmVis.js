@@ -1,7 +1,7 @@
 const INIT_DFS_HEIGHT=300;
 const INIT_DFS_TIME=600;
-const INIT_BFS_HEIGHT = INIT_DFS_HEIGHT;
-const INIT_BFS_TIME = INIT_BFS_TIME;
+const INIT_BFS_HEIGHT = 400;
+const INIT_BFS_TIME = 600;
 var popupNodeDelay=1500;
 
 
@@ -14,13 +14,70 @@ function setDelay(){
 }
 
 function runBFSVisFromNode(nodes,ind){
-    
+	hidePopup();
+	showDFSOutput=false;
+	showBFSOutput=true;
+	nodes[ind].selected=false;
+	var str = "foreach node v&isin;V\{s}<br><p style=\"margin-left:40px\">";
+	str = str + "v.color &larr;&nbsp;white<br>v.d&larr;&nbsp;&inifn;<br>v.&pi;&larr;&nbsp;null</p>";
+	str = str + "s.color &larr;&nbsp; gray <br>s.d&larr;&nbsp;0<br>s.&pi;&larr;&nbsp;null<br>";
+	str = str + "Create Queue Q &larr; &nbsp; {s}";
+	showComment("BFS Initialization",str,INIT_BFS_HEIGHT,function(){
+		BFSInit(nodes,ind);
+		var queue = new Queue();
+		queue.enqueue(ind);
+		openAdditionalInfo();
+		BFSloop(nodes,queue);
+	},INIT_BFS_TIME);
 }
+
+function BFSInit(nodes,ind){
+	for(var i=0;i<nodes.length;i=i+1){
+		nodes[i].color=0;
+		nodes[i].d = Number.POSITIVE_INFINITY;
+		nodes[i].pare = -1;
+	}
+	nodes[ind].color=1;
+	nodes[ind].d = 0;
+}
+
+function BFSloop(nodes,queue){
+	if(queue.isEmpty()){
+	}else{
+		ind = queue.deque();
+		showPopupNodeMessage(ind,"BFS Visiting this node",popupNodeDelay,function(){
+			BFSNeighboursLoop(nodes,ind,0,queue,function(){BFSloop(nodes,queue);});
+		});
+	}
+}
+
+function BFSNeighboursLoop(nodes,ind,i,queue,callback){
+	if(i>=nodes[ind].neighbours.length){
+		nodes[ind].color=2;
+		drawNodes();
+		callback();
+	}else{
+		currNode = nodes[nodes[ind].neighbours[i]];
+		if(currNode.color==0){
+			showPopupNodeMessage(nodes[ind].neighbours[i],"Adding this node to the queue",popupNodeDelay,function(){
+				currNode.color=1;
+				currNode.d = nodes[ind].d + 1;
+				currNode.pare = ind;
+				drawNodes();
+				queue.enqueue(nodes[ind].neighbours[i]);
+				BFSNeighboursLoop(nodes,ind,i+1,queue,callback);
+			});
+		}else{
+			BFSNeighboursLoop(nodes,ind,i+1,queue,callback);
+		}
+	}			
+}
+
 
 function runDFSVisFromNode(nodes,ind){
 	hidePopup();
 	nodes[ind].selected = false;
-	var string = "For each node	v&isin;V do:<br><p style=\"margin-left: 40px\">";
+	var string = "foreach node	v&isin;V do:<br><p style=\"margin-left: 40px\">";
 	string = string + "d[u]&larr;&nbsp;-1<br>f[u]&larr;&nbsp;-1<br>&pi;[u]&larr;null<br>";
 	string = string + "color[u]&larr;white";
 	showComment("Initialization",string,INIT_DFS_HEIGHT,function(){

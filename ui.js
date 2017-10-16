@@ -164,7 +164,8 @@ function showPopupNode(x,y,ind){
 	}else if(indNodeFrom!=ind){
 		string = string + "<input type =\"button\" value=\"Edge to here\" onClick=\"createEdge(" + indNodeFrom + "," + ind +")\"><br>";
 	}
-	string = string + "<input type=\"button\" value=\"Run DFS from here\" onClick=\"runDFSVisFromNode(nodes," + ind + ")\">";
+	string = string + "<input type=\"button\" value=\"Run DFS from here\" onClick=\"runDFSVisFromNode(nodes," + ind + ")\"><br>";
+	string = string + "<input type=\"button\" value=\"Run BFS from here\" onClick=\"runBFSVisFromNode(nodes," + ind + ")\">";
 	popup.innerHTML = string;
 }
 

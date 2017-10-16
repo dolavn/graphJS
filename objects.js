@@ -1,8 +1,10 @@
 var nodes =[]; //The list of the nodes
+var directedGraph=true;
 var nodeCount=0;
 var lastX=20; //The last x coordinate of the node selected before selection
 var lastY=20; //The last y coordinate of the node selected before selection
 var showDFSOutput=false; //If true, discovery time and finish time will be shown for each node
+var showBFSOutput=false; //If true, distance of every node will be shown.
 var indNodeFrom=-1;
 var graphName = "Untitled graph";
 var currGraphId = -1;
@@ -289,7 +291,13 @@ function drawNodes(){
 			drawCircle(x,y,NODE_RADIUS,color,canvas); //Draws the node
 			if(showDFSOutput){
 				var txtD = "d:" + nodes[i].getDiscovery() + "\n" + "f:" + nodes[i].getFinish(); //Draws the text on the node
-				drawText(x-NODE_RADIUS/2,y-NODE_RADIUS/2,txtD,txtColor,canvas);		
+				drawText(x-NODE_RADIUS/2,y-NODE_RADIUS/2,txtD,txtColor,10,canvas);		
+			}
+			if(showBFSOutput){
+				var dixtText = "&infin;";
+				if(nodes[i].d!=Number.POSITIVE_INFINITY){distText = nodes[i].d;}
+				var txtD = "d:" + nodes[i].d;
+				drawText(x-NODE_RADIUS/2,y-NODE_RADIUS/2,txtD,txtColor,14,canvas);	
 			}
 		}
 		

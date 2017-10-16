@@ -105,7 +105,6 @@ function resetColorsDFS(nodes){
 }
 	
 function dfsVisit(ind,nodes){
-	console.log("visiting" + ind);
 	var node = nodes[ind];
 	node.color = 1;
 	node.d = time;
@@ -167,7 +166,7 @@ function Queue(){
     this.arr = [];
 }
 
-Queue.protoype={
+Queue.prototype={
     constructor:Queue,
     
     enqueue:function(obj){
@@ -178,6 +177,9 @@ Queue.protoype={
         return ans;
     },
     length:function(){
-        return ans.length;
-    }
+        return this.arr.length;
+    },
+	isEmpty:function(){
+		return this.arr.length==0;
+	}
 }

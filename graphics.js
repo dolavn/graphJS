@@ -40,12 +40,13 @@ function clearCanvas(canvas){
 	@param y1 The y coordinate of the string.
 	@param txt The string to be drawn.
 	@param color The color of the text.
+	@param size The size of the text.
 	@param canvas The divobject on which to draw the text.
 */
-function drawText(x1,y1,txt,color,canvas){
+function drawText(x1,y1,txt,color,size,canvas){
 	gr = getGraphics(canvas);
 	var col = new jsColor(color);
-	var font = new jsFont("Arial","normal","x-small","normal","normal");
+	var font = new jsFont("Arial","normal",size + "px","normal","normal");
 	var point = new jsPoint(x1,y1);
 	gr.drawText(txt,point,font,col,2,"center");
 }
