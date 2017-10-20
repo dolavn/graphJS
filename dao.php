@@ -181,7 +181,7 @@
 		}
 		
 		function fetchAll(){
-			$str = "SELECT first_node,second_node FROM edges";
+			$str = "SELECT first_node,second_node,weight FROM edges";
 			$this->rows = $this->db->query($str);
 		}
 		
@@ -195,15 +195,17 @@
 			}else{
 				$first_node = $curr[0];
 				$second_node = $curr[1];
-				return new Edge($first_node,$second_node);
+				$weight = $curr[2];
+				return new Edge($first_node,$second_node,$weight);
 			}
 		}
 		
 		function addEdge($edge){
 			$node1 = $edge->getNode1();
 			$node2 = $edge->getNode2();
-			$str = "INSERT INTO edges (first_node,second_node)
-					VALUES (".$node1.",".$node2.")";
+			$weight = $edge->getWeight();
+			$str = "INSERT INTO edges (first_node,second_node,weight)
+					VALUES ('".$node1."','".$node2."','".$weight."')";
 			$this->db->exec($str);
 			//echo($str."\n");
 		}
@@ -227,13 +229,18 @@
 		}
 		
 		function getGraphById($graph_id){
-			$str = "SELECT graph_id,graph_name,member_id FROM graphs WHERE graph_id='".$graph_id."'";
+			$str = "SELECT graph_id,graph_name,member_id,directed,weighted FROM graphs WHERE graph_id='".$graph_id."'";
 			$this->rows = $this->db->query($str);
 			return $this->getNext();
 		}
 		
 		function fetchAllByMember($member_id){
-			$str = "SELECT graph_id,graph_name,member_id FROM graphs WHERE member_id=".$member_id;
+			$str = "SELECT graph_id,graph_name,member_id,directed,weighted FROM graphs WHERE member_id=".$member_id;
+			$this->rows = $this->db->query($str);
+		}
+		
+		function fetchAll(){
+			$str = "SELECT graph_id,graph_name,member_id,directed,weighted FROM graphs";
 			$this->rows = $this->db->query($str);
 		}
 		
@@ -249,8 +256,10 @@
 			$graph_id = $graph->getId();
 			$graph_name = $graph->getName();
 			$member_id = $graph->getMemberId();
-			$str = "INSERT INTO graphs(graph_id,graph_name,member_id) 
-			VALUES ('".$graph_id."','".$graph_name."','".$member_id."')";
+			$directed = $graph->getDirected();
+			$weighted = $graph->getWeighted();
+			$str = "INSERT INTO graphs(graph_id,graph_name,member_id,directed,weighted) 
+			VALUES ('".$graph_id."','".$graph_name."','".$member_id."','".$directed."','".$weighted."')";
 			$this->db->exec($str);
 			//echo($str."\n");
 		}
@@ -286,12 +295,14 @@
 				$id = $curr[0];
 				$name = $curr[1];
 				$member_id = $curr[2];
+				$directed = $curr[3];
+				$weighted = $curr[4];
 				$nodes = array();
 				$this->nodes->fetchAllFromGraph($id);
 				while($node = $this->nodes->getNext()){
 					array_push($nodes,$node);
 				}
-				return new Graph($id,$name,$member_id,$nodes);
+				return new Graph($id,$name,$member_id,$nodes,$directed,$weighted);
 			}
 		}
 	}

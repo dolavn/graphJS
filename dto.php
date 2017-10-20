@@ -86,10 +86,13 @@
 	class Edge{
 		private $node1;
 		private $node2;
+		private $weight;
 		
-		function __construct($node1,$node2){
+		
+		function __construct($node1,$node2,$weight){
 			$this->node1 = $node1;
 			$this->node2 = $node2;
+			$this->weight = $weight;
 		}
 		
 		function getNode1(){
@@ -98,6 +101,10 @@
 		
 		function getNode2(){
 			return $this->node2;
+		}
+		
+		function getWeight(){
+			return $this->weight;
 		}
 		
 		function setNode1($node1){
@@ -113,13 +120,17 @@
 		private $id;
 		private $name;
 		private $member_id;
+		private $directed;
+		private $weighted;
 		private $nodes;
 		
-		function __construct($id,$name,$member_id,$nodes){
+		function __construct($id,$name,$member_id,$nodes,$directed,$weighted){
 			$this->id = $id;
 			$this->name = $name;
 			$this->member_id = $member_id;
 			$this->nodes = $nodes;
+			$this->directed = $directed;
+			$this->weighted = $weighted;
 		}
 		
 		public function getId(){
@@ -136,6 +147,14 @@
 		
 		public function getNodes(){
 			return $this->nodes;
+		}
+		
+		public function getDirected(){
+			return $this->directed;
+		}
+		
+		public function getWeighted(){
+			return $this->weighted;
 		}
 	}
 		

@@ -7,6 +7,10 @@ var timeOutEvent;
 function setUpUI(){
 	drawNodes();
 	document.getElementById("nodesTableCell").style.height=$(drawCanvas).height() + "px";
+	var weighted = document.getElementById("weightedGraph");
+	if(weighted!=null){
+		weighted.checked = false;
+	}
 	addListeners();
 }
 

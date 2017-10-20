@@ -1,5 +1,6 @@
 var nodes =[]; //The list of the nodes
 var directedGraph=true;
+var weightedGraph=false;
 var nodeCount=0;
 var lastX=20; //The last x coordinate of the node selected before selection
 var lastY=20; //The last y coordinate of the node selected before selection
@@ -21,8 +22,32 @@ function changeGraphName(){
 	drawNodes();
 }
 
+function setWeighted(){
+	var c = true;
+	if(nodes.length>0){
+		c = confirm("Are you sure? The current graph will be deleted after changing a graph option");
+	}
+	if(c){
+		nodes = [];
+		weightedGraph = !weightedGraph;
+		drawNodes();
+	}
+}
+
+function setDirected(){
+	var c = true;
+	if(nodes.length>0){
+		c = confirm("Are you sure? The current graph will be deleted after changing a graph option");
+	}
+	if(c){
+		nodes = [];
+		directedGraph = !directedGraph;
+		drawNodes();
+	}
+}
+
 function loadGraphToMainCanvas(graph_id){
-	var nodes = loadGraph(graph_id,null,loadNodes);
+	var nodes = loadGraph(graph_id,null,loadNodes).nodes;
 	document.getElementById("saveButton").disabled=false;
 	hideLoadGraph();
 	
@@ -39,11 +64,12 @@ function loadGraph(graph_id,callBackParams,callback){
 	http.setRequestHeader("Connection", "close");
 	http.onreadystatechange = function() {//Call a function when the state changes.
 		if(http.readyState == 4 && http.status == 200) {
-			var nodes = decodeGraph(http.responseText);
+			var graph = decodeGraph(http.responseText);
+			var nodes = graph.nodes;
 			if(params==null){
 				callback(nodes);
 			}else{
-				callback(nodes,callBackParams);
+				callback(nodes,graph.directed,callBackParams);
 			}
 		}
 	}
@@ -52,13 +78,17 @@ function loadGraph(graph_id,callBackParams,callback){
 
 function saveGraph(){
 	var url = "saveGraph.php";
-	var params = "graph_id=" + currGraphId + "&graph_name=" + graphName + "&nodes=";
+	var directed = 0;
+	if(directedGraph){
+		directed = 1;
+	}
+	var params = "graph_id=" + currGraphId + "&graph_name=" + graphName + "&directed=" + directed + "&weighted=0" + "&nodes=";
 	if(nodes.length>0){
 		for(i=0;i<nodes.length;i=i+1){
 			var node = nodes[i];
 			var nodeStr =  nodes[i].getDatabaseIndex() + "@" + nodes[i].ind + "@" + nodes[i].x + "@" + nodes[i].y;
 			for(j=0;j<node.neighbours.length;j=j+1){
-				nodeStr = nodeStr + "@" + node.neighbours[j];
+				nodeStr = nodeStr + "@" + node.neighbours[j] + "|" + "1";
 			}
 			params = params + nodeStr + "$";
 		}
@@ -82,9 +112,11 @@ function decodeGraph(str){
 	str = str.substr(1,str.length-2);
 	var res = str.split("$");
 	var name = res[0];
+	var directedObj = res[1];
+	var weightedObj = res[2];
 	graphName = name;
-	var nodes=[];
-	for(i=1;i<res.length;i=i+1){
+	var nodesList=[];
+	for(i=3;i<res.length;i=i+1){
 		var nodeStr = res[i].split("?");
 		var id=parseInt(nodeStr[0]); var ind = parseInt(nodeStr[1]); var x = parseInt(nodeStr[2]); var y=parseInt(nodeStr[3]);
 		var currNode = new Node(x,y,ind);
@@ -94,9 +126,9 @@ function decodeGraph(str){
 				currNode.addNeighbour(parseInt(nodeStr[j]));
 			}
 		}
-		nodes.push(currNode);
+		nodesList.push(currNode);
 	}
-	return nodes;
+	return {nodes:nodesList,directed:directedObj,weighted:weightedObj};
 }
 
 function loadNodes(newNodes){
@@ -115,7 +147,7 @@ function calcCanvasWidth(){
 	Adds a new node to the node list.
 */
 function addNode(){
-        var saveButton = document.getElementById("saveButton");
+	var saveButton = document.getElementById("saveButton");
         if(saveButton!=null){
             document.getElementById("saveButton").disabled=false;
         }
@@ -164,6 +196,7 @@ function getEdgeNum(){
 	for(i=0;i<nodes.length;i=i+1){
 		edges = edges + nodes[i].neighbours.length;
 	}
+	if(!directedGraph){edges = edges/2;}
 	var string = "Number of edges:" + edges + "<br><input type=\"button\" onClick=\"clearMessages(-1)\" value=\"Ok\">";
 	document.getElementById("messages").innerHTML = string;
 }
@@ -203,7 +236,7 @@ function removeNode(ind){
 	drawNodes();
 }
 
-function fillThumbnail(nodes,canvas){
+function fillThumbnail(nodes,directed,canvas){
 	var maxX = Number.NEGATIVE_INFINITY;
 	var maxY = Number.NEGATIVE_INFINITY;
 	var i;
@@ -223,7 +256,11 @@ function fillThumbnail(nodes,canvas){
 			var neighbour = nodes[node.neighbours[j]];
 			var otherX = neighbour.x*ratioX;
 			var otherY = neighbour.y*ratioY;
-			drawArrow(x,y,otherX,otherY,"black",SMALL_ARROW,THUMBNAIL_RADIUS,canvas);
+			if(directed==1){
+				drawArrow(x,y,otherX,otherY,"black",SMALL_ARROW,THUMBNAIL_RADIUS,canvas);
+			}else{
+				drawLineCorr(x,y,otherX,otherY,"black",THUMBNAIL_RADIUS,canvas);
+			}
 		}
 	}
 }
@@ -272,8 +309,14 @@ function drawNodes(){
 					color = "blue";
 				}
 				var other = nodes[nodes[i].neighbours[j]];
-				if(other.visible){
-					drawArrow(x,y,other.getX(),other.getY(),color,BIG_ARROW,NODE_RADIUS,canvas); //Draws edges
+				if(other.visible){ //Draw the edge
+					if(directedGraph){
+						drawArrow(x,y,other.getX(),other.getY(),color,BIG_ARROW,NODE_RADIUS,canvas); //Directed graph, draws an arrow
+					}else{
+						if(i<nodes[i].neighbours[j]){ //Should only draws the line once, so checks if the index of the first node is smaller.
+							drawLineCorr(x,y,other.getX(),other.getY(),color,NODE_RADIUS,canvas); //Undirected graph draws a line.
+						}
+					}
 					color = "black";
 				}
 			}
@@ -338,6 +381,9 @@ function clearMessages(ind){
 function removeEdge(ind1,ind2){
 	var node = nodes[ind1];
 	node.removeEdge(ind2);
+	if(!directedGraph){
+		nodes[ind2].removeEdge(ind1);
+	}
 	drawNodes();
 	hidePopup();
 }
@@ -375,6 +421,9 @@ function createEdge(ind1,ind2){
 	var node1 = nodes[ind1];
 	var node2 = nodes[ind2];
 	node1.addNeighbour(ind2);
+	if(!directedGraph){
+		node2.addNeighbour(ind1);
+	}
 	nodes[ind1].selected=false;
 	nodes[ind2].selected=false;
 	indNodeFrom = -1;
@@ -424,7 +473,7 @@ Node.prototype={
 		@param ind The index of the new neighbour.
 	*/
 	addNeighbour:function(ind){
-		this.neighbours.push(ind);
+		this.neighbours.push([ind,1]);
 	},
 	/**
 		Sets the database index of this node.
@@ -517,7 +566,7 @@ Node.prototype={
 	removeEdge:function(ind){
 		var del=-1; //The index to remove
 		for(j=0;j<this.neighbours.length && del==-1;j=j+1){
-			if(this.neighbours[j]==ind){
+			if(this.neighbours[j][0]==ind){
 				del = j;
 			}
 		}
@@ -544,6 +593,7 @@ Node.prototype={
 		return ans;
 	}
 }
+
 
 /**
 	Creates a new line object, which goes from point (x1,y1) to point (x2,y2)

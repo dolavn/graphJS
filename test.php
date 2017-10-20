@@ -6,9 +6,6 @@
 	$members = new Members();
 	$edges = new Edges();
 	$nodes = new Nodes();
-	$db = new Database();
-	$db->exec("ALTER TABLE graphs ADD COLUMN directed BIT");
-	$db->exec("UPDATE graphs SET directed='1' WHERE '1'='1'");
 	/*$node = new Node(1,25,25,0,1,0);
 	$node2 = new Node(2,100,80,1,1,0);
 	$nodes->addNode($node);
@@ -36,8 +33,8 @@
 	}
 	echo("</table><br><br>");
 	$graphs = new Graphs();
-	echo("<table border=1><tr><td>Id</td><td>Name</td><td>Member id</td><td>Nodes</td><td>Directed</td></tr>");
-	$graphs->fetchAllByMember(1);
+	echo("<table border=1><tr><td>Id</td><td>Name</td><td>Member id</td><td>Nodes</td><td>Directed</td><td>Weighted</td></tr>");
+	$graphs->fetchAll();
 	while($graph = $graphs->getNext()){
 		echo("<tr>");
 		echo("<td>".$graph->getId()."</td><td>".$graph->getName()."</td><td>".$graph->getMemberId());
@@ -45,14 +42,14 @@
 		foreach($graph->getNodes() as $node){
 			echo($node->getId()." ");
 		}
-		echo("</td><td>".$graph->getDirected()."</td></tr>");
+		echo("</td><td>".$graph->getDirected()."</td><td>".$graph->getWeighted()."</td></tr>");
 	}
 	
-	echo("</table><br><table border=1><tr><td>First node</td><td>Second node</td></tr>");
+	echo("</table><br><table border=1><tr><td>First node</td><td>Second node</td><td>Weight</td></tr>");
 	$edges->fetchAll();
 	while($edge = $edges->getNext()){
 		echo("<tr>");
-		echo("<td>".$edge->getNode1()."</td><td>".$edge->getNode2()."</td></tr>");
+		echo("<td>".$edge->getNode1()."</td><td>".$edge->getNode2()."</td><td>".$edge->getWeight()."</td></tr>");
 	}
 	echo("</table>");
 ?>

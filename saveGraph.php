@@ -21,10 +21,12 @@
 			$name = $_POST['graph_name'];
 			$graphs = new Graphs();
 			$graph_id = $_POST['graph_id'];
+			$directed = $_POST['directed'];
+			$weighted = $_POST['weighted'];
 			if($graph_id==-1){ //This is a new graph
 				$newGraph = true;
 				$graph_id = $graphs->getNextId();
-				$graph = new Graph($graph_id,$name,$member_id,0);
+				$graph = new Graph($graph_id,$name,$member_id,0,$directed,$weighted);
 				$graphs->addGraph($graph); //Adds the graph to the database.
 			}else{
 				$graphs->setGraphName($graph_id,$name); //Not a new graph. Updates it's name only.
@@ -57,7 +59,8 @@
 					$y = $currArr[3];
 					$newNode=false;
 					for($j=4;$j<count($currArr);$j++){ //Goes over all the node's neighbours.
-						$currEdge = new Edge($i,$currArr[$j]);
+						$edgeStr = explode('|',$currArr[$j]);
+						$currEdge = new Edge($i,$edgeStr[0],$edgeStr[1]);
 						array_push($existingEdges,$currEdge);
 					}
 					if($id==-1){

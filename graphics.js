@@ -172,6 +172,28 @@ function getSlope(x1,y1,x2,y2){
 }
 
 /**
+	Draws a line from point (x1,y1) to point (x2,y2), while offseting
+	the beginning and end point of the line by a given radius.
+	
+	@param x1 The first x coordinate
+	@param y1 The first y coordainte
+	@param x2 The second x coordinate
+	@param y2 The second y coordinate
+	@param color The line's color
+	@param radius The offset radius
+	@param canvas The canvas on which to draw
+*/
+function drawLineCorr(x1,y1,x2,y2,color,radius,canvas){
+	var point = getCorrPoint(x1,y1,x2,y2,radius); //Corrects the end point of the the line to be on the edge of the node.
+	x2 = point['x'];
+	y2 = point['y'];
+	point = getCorrPoint(x2,y2,x1,y1,radius); //Corrects the start point of the line to be on the edge of the node.
+	x1 = point['x'];
+	y1 = point['y'];
+	drawLine(x1,y1,x2,y2,color,canvas);
+}
+
+/**
 	Draws an arrow from point (x1,y1) to point (x2,y2).
 	
 	@param x1 The first x coordinate
