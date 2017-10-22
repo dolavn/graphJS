@@ -29,8 +29,8 @@ function getAdjMatrix(nodes){
 		for(var j=0;j<matrixRow.length;j=j+1){
 			matrixRow[j]=0;
 		}
-		for(var j=0;j<nodes[i].neighbours.length;j=j+1){
-			matrixRow[nodes[i].neighbours[j]]=1;
+		for(var j=0;j<nodes[i].getNeighboursNum();j=j+1){
+			matrixRow[nodes[i].getNeighbour(j)]=1;
 		}
 		ans.push(matrixRow);
 	}
@@ -109,10 +109,10 @@ function dfsVisit(ind,nodes){
 	node.color = 1;
 	node.d = time;
 	time = time+1;
-	for(var j=0;j<node.neighbours.length;j=j+1){
-		var neighbour = nodes[node.neighbours[j]];
+	for(var j=0;j<node.getNeighboursNum();j=j+1){
+		var neighbour = nodes[node.getNeighbour(j)];
 		if(neighbour.getColor()==0){
-			dfsVisit(node.neighbours[j],nodes);
+			dfsVisit(node.getNeighbour(j),nodes);
 		}
 	}
 	node.f = time;
@@ -148,10 +148,10 @@ function createTranspose(nodes){
 	for(i=0;i<nodes.length;i=i+1){
 		var node = nodes[i];
 		var j;
-		for(j=0;j<node.neighbours.length;j=j+1){
-			var currInd = node.neighbours[j];
+		for(j=0;j<node.getNeighboursNum();j=j+1){
+			var currInd = node.getNeighbour(j);
 			var neighbour = newNodes[currInd];
-			neighbour.neighbours.push(i);
+			neighbour.addNeighbour(i);
 		}
 	}
 	return newNodes;

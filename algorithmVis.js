@@ -52,19 +52,19 @@ function BFSloop(nodes,queue){
 }
 
 function BFSNeighboursLoop(nodes,ind,i,queue,callback){
-	if(i>=nodes[ind].neighbours.length){
+	if(i>=nodes[ind].getNeighboursNum()){
 		nodes[ind].color=2;
 		drawNodes();
 		callback();
 	}else{
-		currNode = nodes[nodes[ind].neighbours[i]];
+		currNode = nodes[nodes[ind].getNeighbour(i)];
 		if(currNode.color==0){
-			showPopupNodeMessage(nodes[ind].neighbours[i],"Adding this node to the queue",popupNodeDelay,function(){
+			showPopupNodeMessage(nodes[ind].getNeighbour(i),"Adding this node to the queue",popupNodeDelay,function(){
 				currNode.color=1;
 				currNode.d = nodes[ind].d + 1;
 				currNode.pare = ind;
 				drawNodes();
-				queue.enqueue(nodes[ind].neighbours[i]);
+				queue.enqueue(nodes[ind].getNeighbour(i));
 				BFSNeighboursLoop(nodes,ind,i+1,queue,callback);
 			});
 		}else{
@@ -166,16 +166,16 @@ function dfsLoop(i,cnodes){
 	@param callback The callback function to be called upon finish.
 */
 function dfsNeighboursLoop(i,j,cnodes,callback){
-	if(j>=cnodes[i].neighbours.length){
+	if(j>=cnodes[i].getNeighboursNum()){
 		fillDFSTable(cnodes,i,'f');
 		showPopupNodeMessage(i,"Finishing with node",popupNodeDelay,function(){dfsFinishNode(i,cnodes);callback();});
 	}else{
-		neighbour = cnodes[cnodes[i].neighbours[j]];
+		neighbour = cnodes[cnodes[i].getNeighbour(j)];
 		if(neighbour.getColor()==0){
-			fillDFSTable(cnodes,cnodes[i].neighbours[j],'d');
+			fillDFSTable(cnodes,cnodes[i].getNeighbour(j),'d');
 			neighbour.pare = i;
-			showPopupNodeMessage(cnodes[i].neighbours[j],"DFS visiting this node",popupNodeDelay,function(){
-				dfsVisitVis(cnodes[i].neighbours[j],cnodes,function(){dfsNeighboursLoop(i,j+1,cnodes,callback);});
+			showPopupNodeMessage(cnodes[i].getNeighbour(j),"DFS visiting this node",popupNodeDelay,function(){
+				dfsVisitVis(cnodes[i].getNeighbour(j),cnodes,function(){dfsNeighboursLoop(i,j+1,cnodes,callback);});
 			});
 		}else{
 			dfsNeighboursLoop(i,j+1,cnodes,callback);

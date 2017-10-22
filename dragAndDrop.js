@@ -114,13 +114,13 @@ function checkCollisionEdge(x,y){
 	var fin=false;
 	for(i=0;i<nodes.length && !fin;i++){
 		var node1 = nodes[i];
-		for(j=0;j<node1.neighbours.length && !fin;j++){
+		for(j=0;j<node1.getNeighboursNum() && !fin;j++){
 			if(i!=j){
-				var node2 = nodes[node1.neighbours[j]];
+				var node2 = nodes[node1.getNeighbour(j)];
 				var x1 = node1.x; var y1 = node1.y; var x2 = node2.x; var y2 = node2.y;
 				var line = new Line(x1,y1,x2,y2);
 				if(line.onLine(x,y,EDGE_WIDTH)){
-					selectedEdge = [i,node1.neighbours[j]];
+					selectedEdge = [i,node1.getNeighbour(j)];
 					fin = true;
 				}
 			}

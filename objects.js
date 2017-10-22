@@ -47,7 +47,7 @@ function setDirected(){
 }
 
 function loadGraphToMainCanvas(graph_id){
-	var nodes = loadGraph(graph_id,null,loadNodes).nodes;
+	loadGraph(graph_id,null,loadNodes);
 	document.getElementById("saveButton").disabled=false;
 	hideLoadGraph();
 	
@@ -60,14 +60,14 @@ function loadGraph(graph_id,callBackParams,callback){
 	currGraphId=graph_id;
 	http.open("POST",url,true);
 	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	http.setRequestHeader("Content-length", params.length);
-	http.setRequestHeader("Connection", "close");
+	//http.setRequestHeader("Content-length", params.length);
+	//http.setRequestHeader("Connection", "close");
 	http.onreadystatechange = function() {//Call a function when the state changes.
 		if(http.readyState == 4 && http.status == 200) {
 			var graph = decodeGraph(http.responseText);
 			var nodes = graph.nodes;
-			if(params==null){
-				callback(nodes);
+			if(callBackParams==null){
+				callback(nodes,graph.directed);
 			}else{
 				callback(nodes,graph.directed,callBackParams);
 			}
@@ -87,8 +87,8 @@ function saveGraph(){
 		for(i=0;i<nodes.length;i=i+1){
 			var node = nodes[i];
 			var nodeStr =  nodes[i].getDatabaseIndex() + "@" + nodes[i].ind + "@" + nodes[i].x + "@" + nodes[i].y;
-			for(j=0;j<node.neighbours.length;j=j+1){
-				nodeStr = nodeStr + "@" + node.neighbours[j] + "|" + "1";
+			for(j=0;j<node.getNeighboursNum();j=j+1){
+				nodeStr = nodeStr + "@" + node.getNeighbour(j) + "|" + "1";
 			}
 			params = params + nodeStr + "$";
 		}
@@ -98,8 +98,8 @@ function saveGraph(){
 	var http = new XMLHttpRequest();
 	http.open("POST",url,true);
 	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	http.setRequestHeader("Content-length", params.length);
-	http.setRequestHeader("Connection", "close");
+	//http.setRequestHeader("Content-length", params.length);
+	//http.setRequestHeader("Connection", "close");
 	http.onreadystatechange = function() {//Call a function when the state changes.
 		if(http.readyState == 4 && http.status == 200) {
 			alert(http.responseText);
@@ -131,9 +131,10 @@ function decodeGraph(str){
 	return {nodes:nodesList,directed:directedObj,weighted:weightedObj};
 }
 
-function loadNodes(newNodes){
+function loadNodes(newNodes,directed){
 	nodes = newNodes;
 	nodeCount = nodes.length;
+	directedGraph = directed==1;
 	findSCC(nodes);
 	drawNodes();
 }
@@ -194,7 +195,7 @@ function getEdgeNum(){
 	var i;
 	//Counts all the edges in the graph
 	for(i=0;i<nodes.length;i=i+1){
-		edges = edges + nodes[i].neighbours.length;
+		edges = edges + nodes[i].getNeighboursNum();
 	}
 	if(!directedGraph){edges = edges/2;}
 	var string = "Number of edges:" + edges + "<br><input type=\"button\" onClick=\"clearMessages(-1)\" value=\"Ok\">";
@@ -210,8 +211,8 @@ function removeNode(ind){
 	for(i=0;i<nodes.length;i=i+1){
 		if(i!=ind){
 			var found=false;
-			for(j=0;j<nodes[i].neighbours.length && !found;j=j+1){
-				if(nodes[i].neighbours[j]==ind){
+			for(j=0;j<nodes[i].getNeighboursNum() && !found;j=j+1){
+				if(nodes[i].getNeighbour(j)==ind){
 					nodes[i].neighbours.splice(j,1);
 				}
 			}
@@ -226,9 +227,9 @@ function removeNode(ind){
 		node.ind = node.ind - 1;
 	}
 	for(i=0;i<nodes.length;i=i+1){
-		for(j=0;j<nodes[i].neighbours.length;j=j+1){
-			if(nodes[i].neighbours[j]>ind){
-				nodes[i].neighbours[j] = nodes[i].neighbours[j]-1;
+		for(j=0;j<nodes[i].getNeighboursNum();j=j+1){
+			if(nodes[i].getNeighbour(j)>ind){
+				nodes[i].setNeighbour(j,getNeighbour(j)-1);
 			}
 		}
 	}
@@ -252,8 +253,8 @@ function fillThumbnail(nodes,directed,canvas){
 		var x = node.x*ratioX;
 		var y = node.y*ratioY;
 		drawCircle(x,y,THUMBNAIL_RADIUS,"black",canvas);
-		for(var j=0;j<node.neighbours.length;j=j+1){
-			var neighbour = nodes[node.neighbours[j]];
+		for(var j=0;j<node.getNeighboursNum();j=j+1){
+			var neighbour = nodes[node.getNeighbour(j)];
 			var otherX = neighbour.x*ratioX;
 			var otherY = neighbour.y*ratioY;
 			if(directed==1){
@@ -303,17 +304,17 @@ function drawNodes(){
 			var y = nodes[i].getY();
 			var color="black";
 			var rowSelected=false;
-			for(j=0;j<nodes[i].neighbours.length;j=j+1){ //Goes over all the neighbours of the current node
+			for(j=0;j<nodes[i].getNeighboursNum();j=j+1){ //Goes over all the neighbours of the current node
 				color = "black";
 				if(selectedEdge[0]==i && selectedEdge[1]==j){
 					color = "blue";
 				}
-				var other = nodes[nodes[i].neighbours[j]];
+				var other = nodes[nodes[i].getNeighbour(j)];
 				if(other.visible){ //Draw the edge
 					if(directedGraph){
 						drawArrow(x,y,other.getX(),other.getY(),color,BIG_ARROW,NODE_RADIUS,canvas); //Directed graph, draws an arrow
 					}else{
-						if(i<nodes[i].neighbours[j]){ //Should only draws the line once, so checks if the index of the first node is smaller.
+						if(i<nodes[i].getNeighbour(j)){ //Should only draws the line once, so checks if the index of the first node is smaller.
 							drawLineCorr(x,y,other.getX(),other.getY(),color,NODE_RADIUS,canvas); //Undirected graph draws a line.
 						}
 					}
@@ -475,6 +476,15 @@ Node.prototype={
 	addNeighbour:function(ind){
 		this.neighbours.push([ind,1]);
 	},
+	getNeighboursNum:function(){
+		return this.neighbours.length;
+	},
+	getNeighbour:function(ind){
+		return this.neighbours[ind][0];
+	},
+	setNeighbour:function(ind,node){
+		this.neighbours[ind]=node;
+	},
 	/**
 		Sets the database index of this node.
 		
@@ -566,7 +576,7 @@ Node.prototype={
 	removeEdge:function(ind){
 		var del=-1; //The index to remove
 		for(j=0;j<this.neighbours.length && del==-1;j=j+1){
-			if(this.neighbours[j][0]==ind){
+			if(this.getNeighbour(j)==ind){
 				del = j;
 			}
 		}

@@ -1,12 +1,14 @@
 var navOpen=true;
 const NAV_WIDTH = 250;
+var canvasHeight;
 
 var funcHideComment=function(){};
 var timeOutEvent;
 
 function setUpUI(){
 	drawNodes();
-	document.getElementById("nodesTableCell").style.height=$(drawCanvas).height() + "px";
+	canvasHeight = $(drawCanvas).height();
+	document.getElementById("nodesTableCell").style.height=canvasHeight + "px";
 	var weighted = document.getElementById("weightedGraph");
 	if(weighted!=null){
 		weighted.checked = false;
@@ -74,6 +76,8 @@ function openAdditionalInfo(){
 
 function dismissAdditInfo(){
 	DFSInit(nodes);
+	showDFSOutput=false;
+	showBFSOutput=false;
 	drawNodes();
 	var info = document.getElementById("additInfo");
 	info.style.left = ($(document).width());
@@ -180,6 +184,8 @@ function showPopupEdge(x,y,ind1,ind2){
 	popup.style.top=y;
 	popup.style.width = "200px";
 	var string = "<input type=\"button\" value=\"Remove edge\" onClick=\"removeEdge(" + ind1 + "," + ind2+ ")\"><br>";
+	string = string + "<input type=\"text\">";
+	//check
 	popup.innerHTML = string;
 }
 
