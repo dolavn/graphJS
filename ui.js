@@ -177,6 +177,18 @@ function showPopupNode(x,y,ind){
 	popup.innerHTML = string;
 }
 
+function setWeight(nodeInd1,nodeInd2){
+	weightText = document.getElementById("newWeight").value;
+	if(!isNaN(weightText)){
+		var weight = parseInt(weightText);
+		nodes[nodeInd1].setWeight(nodeInd2,weight);
+		hidePopup();
+		drawNodes();
+	}else{
+		document.getElementById("errorText").innerHTML = "Must enter an integer!";
+	}
+}
+
 function showPopupEdge(x,y,ind1,ind2){
 	var popup = document.getElementById("messagePopup");
 	popup.classList.toggle("popupShow");
@@ -184,8 +196,11 @@ function showPopupEdge(x,y,ind1,ind2){
 	popup.style.top=y;
 	popup.style.width = "200px";
 	var string = "<input type=\"button\" value=\"Remove edge\" onClick=\"removeEdge(" + ind1 + "," + ind2+ ")\"><br>";
-	string = string + "<input type=\"text\">";
-	//check
+	if(weightedGraph){
+		string = string + "Set weight:<input type=\"text\" value=\"" + nodes[ind1].getWeight(ind2) +"\" id=\"newWeight\">";
+		string = string + "<div style=\"font-size:10px;color:white\" id=\"errorText\"></div>";
+		string = string + "<input type=\"button\" value=\"Set\" onClick=\"setWeight(" + ind1 + "," + ind2 + ")\">";
+	}
 	popup.innerHTML = string;
 }
 

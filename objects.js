@@ -13,6 +13,7 @@ const CANVAS_WIDTH = 200;
 const CANVAS_HEIGHT = 200;
 const NODE_RADIUS=25; //The radius of the node
 const THUMBNAIL_RADIUS=10;
+const NODE_WEIGHT_TEXT_OFFSET=25;
 
 function changeGraphName(){
 	var name = document.getElementById("graphNameTxt").value;
@@ -67,7 +68,7 @@ function loadGraph(graph_id,callBackParams,callback){
 			var graph = decodeGraph(http.responseText);
 			var nodes = graph.nodes;
 			if(callBackParams==null){
-				callback(nodes,graph.directed);
+				callback(nodes,graph.directed,graph.weighted);
 			}else{
 				callback(nodes,graph.directed,callBackParams);
 			}
@@ -79,16 +80,20 @@ function loadGraph(graph_id,callBackParams,callback){
 function saveGraph(){
 	var url = "saveGraph.php";
 	var directed = 0;
+	var weighted = 0;
 	if(directedGraph){
 		directed = 1;
 	}
-	var params = "graph_id=" + currGraphId + "&graph_name=" + graphName + "&directed=" + directed + "&weighted=0" + "&nodes=";
+	if(weightedGraph){
+		weighted = 1;
+	}
+	var params = "graph_id=" + currGraphId + "&graph_name=" + graphName + "&directed=" + directed + "&weighted=" + weighted + "&nodes=";
 	if(nodes.length>0){
 		for(i=0;i<nodes.length;i=i+1){
 			var node = nodes[i];
 			var nodeStr =  nodes[i].getDatabaseIndex() + "@" + nodes[i].ind + "@" + nodes[i].x + "@" + nodes[i].y;
 			for(j=0;j<node.getNeighboursNum();j=j+1){
-				nodeStr = nodeStr + "@" + node.getNeighbour(j) + "|" + "1";
+				nodeStr = nodeStr + "@" + node.getNeighbour(j) + "|" + node.getWeight(node.getNeighbour(j));
 			}
 			params = params + nodeStr + "$";
 		}
@@ -122,8 +127,12 @@ function decodeGraph(str){
 		var currNode = new Node(x,y,ind);
 		currNode.setDatabaseIndex(id);
 		for(j=4;j<nodeStr.length;j=j+1){
-			if(nodeStr[j]!=-1){
-				currNode.addNeighbour(parseInt(nodeStr[j]));
+			if(nodeStr[j]!=-1){ //-1 Indicates no neighbours for this node.
+				var currEdgeStr= nodeStr[j].split("|");
+				var ind = parseInt(currEdgeStr[0]);
+				var weight = parseInt(currEdgeStr[1]);
+				currNode.addNeighbour(ind);
+				currNode.setWeight(ind,weight);
 			}
 		}
 		nodesList.push(currNode);
@@ -131,10 +140,13 @@ function decodeGraph(str){
 	return {nodes:nodesList,directed:directedObj,weighted:weightedObj};
 }
 
-function loadNodes(newNodes,directed){
+function loadNodes(newNodes,directed,weighted){
 	nodes = newNodes;
 	nodeCount = nodes.length;
 	directedGraph = directed==1;
+	weightedGraph = weighted==1;
+	document.getElementById("directedGraph").checked = directedGraph; //Sets the checkbox according to this graph
+	document.getElementById("weightedGraph").checked = weightedGraph; //Sets the checkbox according to this graph
 	findSCC(nodes);
 	drawNodes();
 }
@@ -319,6 +331,12 @@ function drawNodes(){
 						}
 					}
 					color = "black";
+					if(weightedGraph){
+						var line = new Line(x,y,other.getX(),other.getY());
+						var point = line.getOffset(NODE_WEIGHT_TEXT_OFFSET);
+						var weight = nodes[i].getWeight(nodes[i].getNeighbour(j));
+						drawText(point.x,point.y,weight,"black",15,canvas);
+					}
 				}
 			}
 			if(nodes[i].selected){
@@ -476,12 +494,71 @@ Node.prototype={
 	addNeighbour:function(ind){
 		this.neighbours.push([ind,1]);
 	},
+	/**
+		Returns the number of neighbours of this node.
+		
+		@return The number of neighbours of this node.
+	*/
 	getNeighboursNum:function(){
 		return this.neighbours.length;
 	},
+	/**
+		Returns the ind-th neighbour of this node.
+		
+		@param ind The index of the neighbour
+	*/
 	getNeighbour:function(ind){
 		return this.neighbours[ind][0];
 	},
+	/**
+		Returns the weight of the edge between this node and the node
+		in index ind. Throws an exception if no such edge exists.
+		
+		@param ind The index of the node.
+		@return The weight of the edge between this node and the node in index ind.
+		@throw An exception if no such edge exists.
+	*/
+	getWeight:function(ind){
+		var neighbourInd = this.getNeighbourInd(ind);
+		return this.neighbours[neighbourInd][1];
+	},
+	/**
+		Returns the index in this node's neighbours list of a desired node,
+		throws an exception if the given node is not a neighbour of this one.
+		
+		@param ind A index of a node.
+		@return The index in this node's neighbours list, of that node.
+		@throws An exception if the given node is not a neighbour of this one.
+	*/
+	getNeighbourInd:function(ind){
+		var neighbourInd = -1;
+		for(var i=0;i<this.neighbours.length && neighbourInd==-1;i=i+1){
+			if(ind==this.neighbours[i][0]){
+				neighbourInd = i;
+			}
+		}
+		if(neighbourInd==-1){
+			throw "The given node is not a neighbour of this node.";
+		}
+		return neighbourInd;
+	},
+	/**
+		Sets the weight of the edge between this node and the node with index ind,
+		to a specific weight.
+		
+		@param ind The index of the other node.
+		@param weight The desired weight
+	*/
+	setWeight:function(ind,weight){
+		var neighbourInd = this.getNeighbourInd(ind);
+		this.neighbours[neighbourInd][1] = weight;
+	},
+	/**
+		Sets the ind-th neighbour of this node to be a given node.
+		
+		@param ind The desired index of the node.
+		@param node The node which will become the neighbour.
+	*/
 	setNeighbour:function(ind,node){
 		this.neighbours[ind]=node;
 	},
@@ -671,6 +748,18 @@ Line.prototype={
 			var xM = Math.max(this.x1,this.x2);
 			var y0 = this.getY(x);
 			return (x>=xm && x<=xM && y>=y0-width && y<=y0+width);
+		}
+	},getOffset:function(dist){
+		var midX = (this.x1+this.x2)/2;
+		var midY = (this.y1+this.y2)/2;
+		if(this.vertical){
+			return {x:(midX+dist),y:midY};
+		}else{
+			var ortho = -1/this.m; //The slope of a line orthogonal to this one.
+			var sign = Math.sign(this.y2-this.y1); //Whether the end point of the line is below or above the starting point.
+			var retX = midX - sign*dist/Math.sqrt(1+Math.pow(ortho,2));
+			var retY = midY + ortho*retX - ortho*midX;
+			return {x:retX,y:retY};
 		}
 	}
 }

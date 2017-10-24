@@ -160,13 +160,14 @@
 		}
 		
 		function getNeighbours($node_id){
-			$str = "SELECT second_node FROM edges WHERE first_node=".$node_id;
+			$str = "SELECT second_node,weight FROM edges WHERE first_node=".$node_id;
 			$rowsEdges = $this->db->query($str);
 			$ans = array();
 			while($curr = $this->db->getArray($rowsEdges)){
 				$nodesInd = new Nodes();
 				$currIndex = $nodesInd->getInd($curr[0]);
-				array_push($ans,$currIndex);
+				$edge = new Edge($node_id,$currIndex,$curr[1]);
+				array_push($ans,$edge);
 			}
 			return $ans;
 		}

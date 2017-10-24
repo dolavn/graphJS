@@ -22,7 +22,7 @@
 						$str = $str."-1";
 					}
 					foreach($neighbours as $neighbour){
-						$str = $str.$neighbour."?";
+						$str = $str.$neighbour->getNode2()."|".$neighbour->getWeight()."?";
 					}
 					$str = rtrim($str,'?');
 					$str = $str."$";
