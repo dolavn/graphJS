@@ -10,7 +10,7 @@
 		if(isset($_POST['graph_id'])){			
 			$graph = $graphs->getGraphById($_POST['graph_id']);
 			if($member_id==$graph->getMemberId()){
-				$str = $graph->getName()."$".$graph->getDirected()."$".$graph->getWeighted()."$";
+				$str = $graph->getId()."$".$graph->getName()."$".$graph->getDirected()."$".$graph->getWeighted()."$";
 				foreach($graph->getNodes() as $node){
 					$x = $node->getX();
 					$y = $node->getY();

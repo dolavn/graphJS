@@ -31,6 +31,8 @@
 <meta charset="utf-8"/>
 <html>
 <head>
+<script src="jquery.js"></script>
+<script src="mainCanvas.js"></script>
 <script src="objects.js"></script>
 <script src ="jsDraw2D.js"></script>
 <script src="graphics.js"></script>

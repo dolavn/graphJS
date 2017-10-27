@@ -1,7 +1,7 @@
 const INIT_DFS_HEIGHT=300;
-const INIT_DFS_TIME=600;
+const INIT_DFS_TIME=6000;
 const INIT_BFS_HEIGHT = 400;
-const INIT_BFS_TIME = 600;
+const INIT_BFS_TIME = 6000;
 var popupNodeDelay=1500;
 
 

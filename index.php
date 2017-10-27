@@ -6,6 +6,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="style.css">
 <script src="jquery.js"></script>
+<script src="mainCanvas.js"></script>
 <script src="ui.js"></script>
 <script src="dragAndDrop.js"></script>
 <script src ="jsDraw2D.js"></script>
@@ -70,10 +71,10 @@
 <input type="button" onClick="addNode()" value="Add node">
 <input type="button" onClick="getVertNum()" value="Get number of vertices">
 <input type="button" onClick="getEdgeNum()" value="Get number of edges">
-<input type="button" onClick="runDFSVis(nodes)" value="Run DFS">
-<input type="button" onClick="transpose()" value="Create Transpose">
+<input type="button" onClick="runDFSVis(currGraph.nodes)" value="Run DFS">
+<input type="button" id="buttonTranspose" onClick="transpose()" value="Create Transpose">
 <input type="button" onClick="complement()" value="Create complement graph">
-<input type="button" onClick="findSCC(nodes)" value="Find SCC">
+<input type="button" onClick="findSCC(currGraph.nodes)" value="Find SCC">
 <div class="seperator"></div>
 <p style="font-size:16px">Algorithm Visualization Options:</p><p style="font-size:12px">Speed:</p>
 <input type="range" min="1" max = "10" value="9" class="slider" id="algorithmDelay" onChange="setDelay()">

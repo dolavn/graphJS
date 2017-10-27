@@ -63,7 +63,7 @@ function mouseDown(e){
 		drawNodes();
 	}
 	if(collNode!=-1){
-		selected = nodes[collNode];
+		selected = currGraph.getNode(collNode);
 		selectedInd = collNode;
 		lastX = selected.getX();
 		lastY = selected.getY();
@@ -81,28 +81,19 @@ function mouseDown(e){
 }
 
 function divMove(e,ind){
-	var node = nodes[ind];
+	var node = currGraph.getNode(ind);
 	move = true;
 	var offset = getPosition(document.getElementById('drawCanvas'));
 	node.setLocation(e.clientX-offset.x,e.clientY-offset.y);
-	/*if(checkCollisionNode(ind)!=-1){
-		setTimeout(function(){popupVisible=true;},10);
-		showPopupCreateEdge(e.clientX,e.clientY,ind,i);
-	}*/
 }
 
 function checkCollisionNode(ind){
-	var node = nodes[ind];
+	var node = currGraph.getNode(ind);
 	for(i=0;i<nodes.length;i++){
 		if(i!=ind){
 			var other = nodes[i];
 			var d = dist(node.getX(),node.getY(),other.getX(),other.getY());
 			if(d<NODE_RADIUS*2){
-				/*
-				var string = "<font size=5>Create edge between nodes?</font>";
-				string = string + "<br><button onClick=\"createEdge(" + ind + "," + i + ")\">Yes</button>";
-				string = string + "&nbsp<button onClick=\"clearMessages(" + ind + ")\">No</button>"
-				document.getElementById("messageBox").innerHTML=string;*/
 				return i;
 			}
 		}
@@ -112,10 +103,10 @@ function checkCollisionNode(ind){
 
 function checkCollisionEdge(x,y){
 	var fin=false;
-	for(i=0;i<nodes.length && !fin;i++){
-		var node1 = nodes[i];
+	for(i=0;i<currGraph.getNodesNum() && !fin;i++){
+		var node1 = currGraph.getNode(i);
 		for(j=0;j<node1.getNeighboursNum() && !fin;j++){
-			var node2 = nodes[node1.getNeighbour(j)];
+			var node2 = currGraph.getNode(node1.getNeighbour(j));
 			var x1 = node1.x; var y1 = node1.y; var x2 = node2.x; var y2 = node2.y;
 			var line = new Line(x1,y1,x2,y2);
 			if(line.onLine(x,y,EDGE_WIDTH)){
@@ -135,9 +126,9 @@ function checkCollisionEdge(x,y){
 
 function checkCollision(x,y){
 	var ans = -1;
-	for(i=0;i<nodes.length;i++){
-		var currX = nodes[i].getX();
-		var currY = nodes[i].getY();
+	for(i=0;i<currGraph.getNodesNum();i++){
+		var currX = currGraph.getNode(i).getX();
+		var currY = currGraph.getNode(i).getY();
 		if(dist(x,y,currX,currY)<NODE_RADIUS){
 			ans = i;
 		}

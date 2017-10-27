@@ -6,6 +6,7 @@ var funcHideComment=function(){};
 var timeOutEvent;
 
 function setUpUI(){
+	setupGraph();
 	drawNodes();
 	canvasHeight = $(drawCanvas).height();
 	document.getElementById("nodesTableCell").style.height=canvasHeight + "px";
@@ -14,10 +15,24 @@ function setUpUI(){
 		weighted.checked = false;
 	}
 	addListeners();
+	var heap = new Heap(function(elem1,elem2){if(elem1>elem2){return 1;}if(elem2>elem1){return-1;}return 0;});
+	heap.insert(5);heap.insert(7);heap.insert(14);heap.insert(12);heap.insert(32);
+	/*while(heap.arr.length>0){
+		console.log(heap.removeMin());
+	}*/
+	console.log(heap.arr);
 }
 
+/**
+	Hides the nodes control panel.
+*/
+function hideControlPanel(){
+	document.getElementById("nodeControlPanel").style.visibility="collapse";
+	drawNodes();
+}
 
-function showAdjMatrix(nodes){
+function showAdjMatrix(graph){
+	var nodes = graph.nodes;
 	var popup = document.getElementById("popupMatrix");
 	popup.classList.toggle("popupLargeShow");
 	var matrix = getAdjMatrix(nodes);
@@ -144,7 +159,7 @@ function hideLogin(){
 }
 
 function showPopupNodeMessage(ind,message,delay,callback){
-	var node = nodes[ind];
+	var node = currGraph.getNode(ind);
 	var x = node.x;
 	var y = node.y;
 	var pos = $(drawCanvas).position();
@@ -172,8 +187,8 @@ function showPopupNode(x,y,ind){
 	}else if(indNodeFrom!=ind){
 		string = string + "<input type =\"button\" value=\"Edge to here\" onClick=\"createEdge(" + indNodeFrom + "," + ind +")\"><br>";
 	}
-	string = string + "<input type=\"button\" value=\"Run DFS from here\" onClick=\"runDFSVisFromNode(nodes," + ind + ")\"><br>";
-	string = string + "<input type=\"button\" value=\"Run BFS from here\" onClick=\"runBFSVisFromNode(nodes," + ind + ")\">";
+	string = string + "<input type=\"button\" value=\"Run DFS from here\" onClick=\"runDFSVisFromNode(currGraph.nodes," + ind + ")\"><br>";
+	string = string + "<input type=\"button\" value=\"Run BFS from here\" onClick=\"runBFSVisFromNode(currGraph.nodes," + ind + ")\">";
 	popup.innerHTML = string;
 }
 
@@ -181,7 +196,7 @@ function setWeight(nodeInd1,nodeInd2){
 	weightText = document.getElementById("newWeight").value;
 	if(!isNaN(weightText)){
 		var weight = parseInt(weightText);
-		nodes[nodeInd1].setWeight(nodeInd2,weight);
+		currGraph.getNode(nodeInd1).setWeight(nodeInd2,weight);
 		hidePopup();
 		drawNodes();
 	}else{
@@ -196,8 +211,8 @@ function showPopupEdge(x,y,ind1,ind2){
 	popup.style.top=y;
 	popup.style.width = "200px";
 	var string = "<input type=\"button\" value=\"Remove edge\" onClick=\"removeEdge(" + ind1 + "," + ind2+ ")\"><br>";
-	if(weightedGraph){
-		string = string + "Set weight:<input type=\"text\" value=\"" + nodes[ind1].getWeight(ind2) +"\" id=\"newWeight\">";
+	if(currGraph.weighted){
+		string = string + "Set weight:<input type=\"text\" value=\"" + currGraph.getNode(ind1).getWeight(ind2) +"\" id=\"newWeight\">";
 		string = string + "<div style=\"font-size:10px;color:white\" id=\"errorText\"></div>";
 		string = string + "<input type=\"button\" value=\"Set\" onClick=\"setWeight(" + ind1 + "," + ind2 + ")\">";
 	}
