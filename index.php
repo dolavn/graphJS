@@ -74,6 +74,7 @@
 <input type="button" onClick="runDFSVis(currGraph.nodes)" value="Run DFS">
 <input type="button" id="buttonTranspose" onClick="transpose()" value="Create Transpose">
 <input type="button" onClick="complement()" value="Create complement graph">
+<input type="button" onClick="dijkstra(currGraph.nodes,0)" value="Run dijkstra">
 <input type="button" onClick="findSCC(currGraph.nodes)" value="Find SCC">
 <div class="seperator"></div>
 <p style="font-size:16px">Algorithm Visualization Options:</p><p style="font-size:12px">Speed:</p>

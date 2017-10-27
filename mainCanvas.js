@@ -406,7 +406,7 @@ function drawNodes(){
 	@param ind2 The second index
 */
 function removeEdge(ind1,ind2){
-	var node = currGraph.getNode(ind);
+	var node = currGraph.getNode(ind1);
 	node.removeEdge(ind2);
 	if(!currGraph.directed){
 		currGraph.getNode(ind2).removeEdge(ind1);

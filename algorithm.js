@@ -7,40 +7,51 @@ var time=0;
 function dijkstraInit(nodes,srcInd){
 	var dist = new Array(nodes.length);
 	var prev = new Array(nodes.length);
-	for(var i=0;i<dist.length;i=i+1){
-		dist[i] = Number.POSITIVE_INFINITY;
+	for(var i=0;i<prev.length;i=i+1){
 		prev[i] = null;
 	}
 	var cmp = function(elem1,elem2){ //Function to compare between two nodes
-		if(elem1.dist<elem2.dist){return 1;}
-		if(elem2.dist<elem1.dist){return -1;}
+		if(elem1.dist>elem2.dist){return 1;}
+		if(elem2.dist>elem1.dist){return -1;}
 		return 0;
 	}
-	var heap = new Heap(cmp);
-	for(var i=0;i<nodes.length;i=i+1){
-		heap.insert({ind:i,dist:dist[i]});
+	//Each element in the heap consists of an index of the node, and a distance.
+	var heap = new Heap(cmp); 
+	for(var i=0;i<nodes.length;i=i+1){ //Creates the heap of the distances
+		var currDist = Number.POSITIVE_INFINITY; //The distance of this node from the source node at initialization
+		if(i == srcInd) { currDist = 0;} 
+		dist[i] = heap.insert({ind:i,dist:currDist});
 	}
-	dist[srcInd]=0;
 	return {dist:dist,prev:prev,heap:heap};
 }
 
 function dijkstra(nodes,srcInd){
+	/*
+	Returns the index in the heap of a given node.
+	*/
+	function getHeapIndex(ind){
+		return distInd[ind].value;
+	}
 	var dataSet = dijkstraInit(nodes,srcInd);
-	var heap = dataSet.heap;
-	var dist = dataSet.dist;
-	var prev = dataSet.prev;
-	while(!heap.isEmpty()){
-		var min = heap.removeMin();
+	var heap = dataSet.heap; //The heap of all the (index,distance) pairs.
+	var distInd = dataSet.dist; //The map between a node index and an heap index 
+	var distances = new Array(nodes.length); //An answer array,of all the distances to be returned after the algorith, finishes
+	var prev = dataSet.prev; //Array of all the node's predecessors.
+	while(!heap.isEmpty()){ /*As long as there are still nodes remaining */
+		var min = heap.removeMin(); //Removes the node with the minimum distance
 		var ind = min.ind;
+		distances[ind] = min.dist; //Adds the distance to that node to the answer array
 		var node = nodes[ind];
-		for(var i=0;i<node.getNeighboursNum();i=i+1){
+		for(var i=0;i<node.getNeighboursNum();i=i+1){ //Goes over all the nodes neighbours'
 			var other = node.getNeighbour(i);
-			var temp = dist[ind]+node.getWeight(other);
-			if(temp<dist[other]){
-				
+			var temp = min.dist+node.getWeight(other);
+			if(temp<heap.peek(getHeapIndex(other)).dist){ //There's an improvement to the node's distance
+				heap.changeVal(getHeapIndex(other),{ind:other,dist:temp});  //Updates the node's distance
+				prev[other] = ind;
 			}
 		}
 	}
+	console.log(distances);
 }
 
 function DFSInit(nodes){
@@ -208,7 +219,6 @@ function createTranspose(nodes){
 function Heap(cmp){
 	this.arr = [];
 	this.cmp = function(elem1,elem2){
-		//var elemVal1 = elem1.obj; var elemVal2 = elem2.obj;
 		if(elem1==elem2){return 0;}
 		if(elem1==Number.POSITIVE_INFINITY || elem2==Number.NEGATIVE_INFINITY){return 1;}
 		if(elem1==Number.NEGATIVE_INFINITY || elem2==Number.POSITIVE_INFINITY){return -1;}
@@ -233,22 +243,30 @@ Heap.prototype={
 	switchElements:function(ind1,ind2){
 		var temp = this.arr[ind2];
 		this.arr[ind2] = this.arr[ind1];
-		this.arr[ind2].ind = ind2;
+		this.arr[ind2].ind.value = ind2;
 		this.arr[ind1] = temp;
-		this.arr[ind1].ind = ind1;
+		this.arr[ind1].ind.value = ind1;
 	},
 	upHeapify:function(ind){
 		var currInd = ind;
-		while(currInd>0 && this.cmp(this.arr[this.getFather(currInd)],this.arr[currInd])>0){
+		while(currInd>0 && this.cmp(this.getElement(this.getFather(currInd)),this.getElement(currInd))>0){
 			this.switchElements(currInd,this.getFather(currInd));
 			currInd = this.getFather(currInd);
 		}
 	},
-	getElement:function(ind,oob){
-		if(ind>=this.arr.length || ind<0){
-			return oob;
-		}else{
-			return this.arr[ind];
+	getElement:function(/*ind,oob | ind */){
+		if(arguments.length==0 || arguments.length>2){ throw "Illegal number of arguments to getElement";}
+		if(arguments.length==2){
+			var ind = arguments[0]; var oob = arguments[1];
+			if(ind>=this.arr.length || ind<0){
+				return oob;
+			}else{
+				return this.arr[ind].obj;
+			}
+		}
+		if(arguments.length==1){
+			var ind = arguments[0];
+			return this.arr[ind].obj;
 		}
 	},
 	min:function(elem1,elem2){
@@ -259,6 +277,7 @@ Heap.prototype={
 		}
 	},
 	downHeapify:function(ind){
+		if(ind<0 || ind>=this.arr.length) {console.log(ind);}
 		var currInd = ind; var currElem = this.getElement(ind);
 		var sonRInd = this.getRightSon(ind); var sonR = this.getElement(sonRInd,Number.POSITIVE_INFINITY);
 		var sonLInd = this.getLeftSon(ind); var sonL = this.getElement(sonLInd,Number.POSITIVE_INFINITY);
@@ -283,32 +302,35 @@ Heap.prototype={
 		this.downHeapify(ind);
 	},
 	peekMin:function(){
-		return this.arr[0];
+		return this.peek(0);
 	},
 	removeMin:function(){
-		var ans = this.arr[0];
+		var ans = this.arr[0].obj;
 		this.switchElements(0,this.arr.length-1);
 		this.removeLastElem();
-		this.downHeapify(0);
+		if(!this.isEmpty()){this.downHeapify(0);}
 		return ans;
 	},
 	insert:function(obj){
-		var elem = {ind:{value:(arr.length-1)},obj:obj};
+		var elem = {ind:{value:(this.arr.length)},obj:obj};
 		this.arr.push(elem);
 		this.upHeapify(this.arr.length-1);
 		return elem.ind;
 	},
 	changeVal:function(ind,newVal){
-		this.arr[ind] = newVal;
+		this.arr[ind].obj = newVal;
 		this.upHeapify(ind);
 	},
 	isEmpty:function(){
-		return this.arr.length>0;
+		return this.arr.length<=0;
+	},
+	peek:function(ind){
+		return this.arr[ind].obj;
 	},
 	getHeapAsHTMLTable(tableClass){
-		var str = "<table class=\"" + tableClass + "\">";
+		var str = "<table class=\"" + tableClass + "\"><tr><td>obj</td><td>ind</td>";
 		for(var i=0;i<this.arr.length;i=i+1){
-			str = str + "<tr><td>" + this.arr[i] + "</td></tr>";
+			str = str + "<tr><td>" + this.arr[i].obj + "</td><td>" + this.arr[i].ind.value + "</td></tr>";
 		}
 		str = str + "</table>";
 		return str;
